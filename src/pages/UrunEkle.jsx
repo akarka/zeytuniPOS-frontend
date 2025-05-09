@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
@@ -63,40 +64,46 @@ function UrunEkle() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Yeni Ürün Ekle</h2>
-      <InputField
-        label="Ürün İsmi"
-        value={ad}
-        onChange={(e) => setAd(e.target.value)}
-        placeholder="Örn: Ezine Peyniri"
-      />
+    <div>
+      <nav>
+        <Link to="/">Ana Sayfa</Link>
+      </nav>
 
-      <InputField
-        label="Fiyat (₺)"
-        type="number"
-        value={satisFiyati}
-        onChange={(e) => setSatisFiyati(e.target.value)}
-        placeholder="Örn: 250"
-      />
+      <form onSubmit={handleSubmit}>
+        <h2>Yeni Ürün Ekle</h2>
+        <InputField
+          label="Ürün İsmi"
+          value={ad}
+          onChange={(e) => setAd(e.target.value)}
+          placeholder="Örn: Ezine Peyniri"
+        />
 
-      <SelectField
-        label="Alt Kategori"
-        value={altId}
-        onChange={(e) => setAltId(e.target.value)}
-        options={altKate}
+        <InputField
+          label="Fiyat (₺)"
+          type="number"
+          value={satisFiyati}
+          onChange={(e) => setSatisFiyati(e.target.value)}
+          placeholder="Örn: 250"
+        />
 
-      />
+        <SelectField
+          label="Alt Kategori"
+          value={altId}
+          onChange={(e) => setAltId(e.target.value)}
+          options={altKate}
 
-      <SelectField
-        label="Birim"
-        value={birimId}
-        onChange={(e) => setBirimId(e.target.value)}
-        options={birim}
-      />
+        />
 
-      <button type="submit" style={{ padding: '10px 20px' }}>Kaydet</button>
-    </form>
+        <SelectField
+          label="Birim"
+          value={birimId}
+          onChange={(e) => setBirimId(e.target.value)}
+          options={birim}
+        />
+
+        <button type="submit" style={{ padding: '10px 20px' }}>Kaydet</button>
+      </form>
+    </div>
   );
 }
 
