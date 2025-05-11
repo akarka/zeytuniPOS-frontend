@@ -5,7 +5,7 @@ import api from '../services/api';
 /*import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';*/
 import SatirForm from '../components/SatirForm';
-import UrunEkle from '/pages/UrunEkle'
+//import UrunEkle from '/pages/UrunEkle'
 
 function UrunKontrol() {
   const [hoveredRowId, setHoveredRowId] = useState(null);
