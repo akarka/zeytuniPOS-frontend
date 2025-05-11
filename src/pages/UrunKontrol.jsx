@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import InputField from '../components/InputField';
-import SelectField from '../components/SelectField';
+/*import InputField from '../components/InputField';
+import SelectField from '../components/SelectField';*/
 import SatirForm from '../components/SatirForm';
 
 function UrunKontrol() {
@@ -129,84 +129,80 @@ function UrunKontrol() {
         <Link to="/">Ana Sayfa</Link>
       </nav>
 
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ad</th>
+            <th>Fiyat</th>
+            <th>Alt Kategori</th>
+            <th>Birim</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
 
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Ad</th>
-              <th>Fiyat</th>
-              <th>Alt Kategori</th>
-              <th>Birim</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {urunler.map((urun) => (
-              <React.Fragment key={urun.id}>
-                <tr
-                  onMouseEnter={() => setHoveredRowId(urun.id)}
-                  onMouseLeave={() => setHoveredRowId(null)}
-                >
-                  <td>{urun.id}</td>
-                  <td>{urun.ad}</td>
-                  <td>{urun.satisFiyati}</td>
-                  <td>{urun.altId}</td>
-                  <td>{urun.birimId}</td>
-                  <td>
-                    {hoveredRowId === urun.id && (
-                      <>
-                        <button onClick={() => handleEdit(urun)}>EDIT</button>
-                        <button onClick={() => handleDelete(urun.id)}>DELETE</button>
-                      </>
-                    )}
-                  </td>
-                </tr>
+          {urunler.map((urun) => (
+            <React.Fragment key={urun.id}>
+              <tr
+                onMouseEnter={() => setHoveredRowId(urun.id)}
+                onMouseLeave={() => setHoveredRowId(null)}
+              >
+                <td>{urun.id}</td>
+                <td>{urun.ad}</td>
+                <td>{urun.satisFiyati}</td>
+                <td>{urun.altId}</td>
+                <td>{urun.birimId}</td>
+                <td>
+                  {hoveredRowId === urun.id && (
+                    <>
+                      <button onClick={() => handleEdit(urun)}>EDIT</button>
+                      <button onClick={() => handleDelete(urun.id)}>DELETE</button>
+                    </>
+                  )}
+                </td>
+              </tr>
 
-                {/* Satırın hemen altına SatirForm aç */}
-                {duzenlenenId === urun.id && (
-                  <SatirForm
-                    initialData={editForm}
-                    fields={[
-                      { name: 'ad', placeholder: 'Ürün Adı' },
-                      { name: 'satisFiyati', type: 'number', placeholder: 'Fiyat' },
-                      {
-                        name: 'altId',
-                        type: 'select',
-                        placeholder: 'Alt Kategori',
-                        options: altKate
-                      },
-                      {
-                        name: 'birimId',
-                        type: 'select',
-                        placeholder: 'Birim',
-                        options: birim
-                      }
-                    ]}
-                    onCancel={() => setDuzenlenenId(null)}
-                    onSubmit={async (form) => {
-                      await api.put(`/urunler/${urun.id}`, {
-                        ...form,
-                        satisFiyati: parseFloat(form.satisFiyati),
-                        altId: parseInt(form.altId),
-                        birimId: parseInt(form.birimId)
-                      });
-                      alert("Ürün güncellendi.");
-                      setDuzenlenenId(null);
+              {/* Satırın hemen altına SatirForm aç */}
+              {duzenlenenId === urun.id && (
+                <SatirForm
+                  initialData={editForm}
+                  fields={[
+                    { name: 'ad', placeholder: 'Ürün Adı' },
+                    { name: 'satisFiyati', type: 'number', placeholder: 'Fiyat' },
+                    {
+                      name: 'altId',
+                      type: 'select',
+                      placeholder: 'Alt Kategori',
+                      options: altKate
+                    },
+                    {
+                      name: 'birimId',
+                      type: 'select',
+                      placeholder: 'Birim',
+                      options: birim
+                    }
+                  ]}
+                  onCancel={() => setDuzenlenenId(null)}
+                  onSubmit={async (form) => {
+                    await api.put(`/urunler/${urun.id}`, {
+                      ...form,
+                      satisFiyati: parseFloat(form.satisFiyati),
+                      altId: parseInt(form.altId),
+                      birimId: parseInt(form.birimId)
+                    });
+                    alert("Ürün güncellendi.");
+                    setDuzenlenenId(null);
 
-                      const res = await api.get('/urunler');
-                      setUrunler(res.data);
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-
-
-        <button type="submit" style={{ padding: '10px 20px' }}>Kaydet</button>
-      
+                    const res = await api.get('/urunler');
+                    setUrunler(res.data);
+                  }}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
