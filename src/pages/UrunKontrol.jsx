@@ -5,6 +5,7 @@ import api from '../services/api';
 /*import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';*/
 import SatirForm from '../components/SatirForm';
+import UrunEkle from '/pages/UrunEkle'
 
 function UrunKontrol() {
   const [hoveredRowId, setHoveredRowId] = useState(null);
@@ -86,6 +87,7 @@ function UrunKontrol() {
     }
   };
 
+/*bunu urunekle arayüzünde revisit.
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,6 +123,8 @@ function UrunKontrol() {
       alert('Hata: ' + error.message);
     }
   };
+  
+  */
 
 
   return (
