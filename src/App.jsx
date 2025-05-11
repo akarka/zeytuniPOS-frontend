@@ -1,16 +1,20 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import UrunEkle from './pages/UrunEkle'; // 
+import UrunKontrol from './pages/UrunKontrol'; // 
 import SatisEkle from './pages/SatisEkle';
-import AnaSayfa1 from './pages/AnaSayfa1';
+import Satislar from './pages/Satislar';
+import IslemLog from './pages/IslemLog';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/urun" element={<UrunEkle />} />
+        <Route path="/urun" element={<UrunKontrol />} />
         <Route path="/satis" element={<SatisEkle />} />
-        <Route path="/" element={<AnaSayfa1 />} />
+        <Route path="/islemlog" element={<IslemLog />} />
+        <Route path="/satislar" element={<Satislar />} />
+        <Route path="/" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   );
