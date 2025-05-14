@@ -1,26 +1,28 @@
-import './App.css';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-import UrunKontrol from './pages/UrunKontrol';
-import SatisEkle from './pages/SatisEkle';
-import Satislar from './pages/Satislar';
-import IslemLog from './pages/IslemLog';
-import LoginPage from './pages/LoginPage';
-import AdminPage from './pages/AdminPage';
+import UrunPage from "./pages/UrunPage";
+import SatisEkle from "./pages/SatisEkle";
+import IslemLog from "./pages/IslemLog";
+import TedarikciPage from "./pages/TedarikciPage";
+import LoginPage from "./pages/LoginPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
-  const [aktifKullanici, setAktifKullanici] = useState(null);
+  const [aktifKullanici, setAktifKullanici] = useState(
+    localStorage.getItem("aktifKullanici")
+  );
 
-  // Tarayıcıda login bilgisi varsa otomatik al
+  // tarayıcıda login bilgisi varsa otomatik alacak şekilde revizyon yapılacak
   useEffect(() => {
-    const kayitli = localStorage.getItem('aktifKullanici');
+    const kayitli = localStorage.getItem("aktifKullanici");
     if (kayitli) {
       setAktifKullanici(JSON.parse(kayitli));
     }
   }, []);
 
-  // Korunan rotalar için kontrol
+  // rota kontrolü- unauthorized -> login
   const RequireAuth = ({ children }) => {
     return aktifKullanici ? children : <Navigate to="/login" />;
   };
@@ -28,12 +30,12 @@ function App() {
   return (
     <BrowserRouter>
       {aktifKullanici && (
-        <div style={{ padding: '10px', background: '#f5f5f5' }}>
+        <div style={{ padding: "10px", background: "#f5f5f5" }}>
           Hoş geldin, {aktifKullanici.ad} |
           <button
-            style={{ marginLeft: '10px' }}
+            style={{ marginLeft: "10px" }}
             onClick={() => {
-              localStorage.removeItem('aktifKullanici');
+              localStorage.removeItem("aktifKullanici");
               setAktifKullanici(null);
             }}
           >
@@ -42,37 +44,55 @@ function App() {
         </div>
       )}
       <Routes>
-        <Route path="/login" element={<LoginPage setAktifKullanici={setAktifKullanici} />} />
+        <Route
+          path="/login"
+          element={<LoginPage setAktifKullanici={setAktifKullanici} />}
+        />
 
-        <Route path="/" element={
-          <RequireAuth>
-            <AdminPage />
-          </RequireAuth>
-        } />
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <AdminPage />
+            </RequireAuth>
+          }
+        />
 
-        <Route path="/urun" element={
-          <RequireAuth>
-            <UrunKontrol />
-          </RequireAuth>
-        } />
+        <Route
+          path="/urun"
+          element={
+            <RequireAuth>
+              <UrunPage />
+            </RequireAuth>
+          }
+        />
 
-        <Route path="/satis" element={
-          <RequireAuth>
-            <SatisEkle />
-          </RequireAuth>
-        } />
+        <Route
+          path="/satis"
+          element={
+            <RequireAuth>
+              <SatisEkle />
+            </RequireAuth>
+          }
+        />
 
-        <Route path="/satislar" element={
-          <RequireAuth>
-            <Satislar />
-          </RequireAuth>
-        } />
+        <Route
+          path="/tedarik"
+          element={
+            <RequireAuth>
+              <TedarikciPage />
+            </RequireAuth>
+          }
+        />
 
-        <Route path="/islemlog" element={
-          <RequireAuth>
-            <IslemLog />
-          </RequireAuth>
-        } />
+        <Route
+          path="/islemlog"
+          element={
+            <RequireAuth>
+              <IslemLog />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

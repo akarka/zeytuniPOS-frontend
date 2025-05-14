@@ -10,6 +10,8 @@ function SatisEkle() {
     const [urunAd, setUrunAd] = useState([]);
     const [miktar, setMiktar] = useState('');
     const [satisFiyati, setSatisFiyati] = useState('');
+    const [order, setOrder] = useState('asc');
+    const [satislar, setSatislar] = useState([]);
 
     useEffect(() => {
         api.get('/urunler')
@@ -26,6 +28,15 @@ function SatisEkle() {
             .catch(err => console.error("Urun cekme hatasi:", err));
     }, []);
 
+    useEffect(() => {
+        api.get('/satislar')
+            .then(res => {
+                console.log("Satışlar:", satislar);
+                setSatislar(res.data)
+            })
+            .catch(err => console.error("Satışlar alınamadı:", err));
+    }, [order]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -40,6 +51,9 @@ function SatisEkle() {
             setUrunId('');
             setSatisFiyati('');
             setMiktar('');
+
+            const res = await api.get('/satislar');
+            setSatislar(res.data);
         } catch (error) {
             alert('Hata: ' + error.message);
         }
@@ -81,10 +95,33 @@ function SatisEkle() {
 
                 <button type="submit" style={{ padding: '10px 20px' }}>Kaydet</button>
             </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Satış ID</th>
+                        <th>Ürün ID</th>
+                        <th>Miktar</th>
+                        <th>Satış Fiyatı{order === 'desc'}</th>
+                        <th>Satış Tarihi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {satislar.map((satislar, index) => (
+                        <tr key={satislar.id ?? `${satislar.urunId}-${index}`}>
+                            <td>{satislar.id}</td>
+                            <td>{satislar.urunId}</td>
+                            <td>{satislar.miktar}</td>
+                            <td>{satislar.satisFiyati}</td>
+                            <td>{satislar.satisTarihi}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
 
     );
-    
+
 };
 
 

@@ -10,3 +10,39 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+todo list
+
+database:
+otomatik db backup
+on delete cascade olayları
+
+frontend:
+
+    kullanıcı yetkilendirmesi
+    	login
+    	yetkiye özel sayfalar
+
+    işlemlog (bütün table döndüren sayfalar) -bunun detayını öğren
+
+    pagination asc/desc
+
+    XPage.jsx rename
+
+    table component
+
+    exception handling
+    validation response
+
+    	urunpage:
+    		in-place edit
+    		alt kategori, birim mapping (ID değil isim gelsin)
+
+
+    CSR vs SSR
+
+backend:
+
+    DTO!
+
+    async await

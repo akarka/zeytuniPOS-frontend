@@ -17,7 +17,6 @@ function islemLog() {
     }, [order]);
 
     return (
-
         <div>
             <nav>
                 <Link to="/">Ana Sayfa</Link>
