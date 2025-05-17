@@ -8,6 +8,7 @@ import IslemLog from "./pages/IslemLog";
 import TedarikciPage from "./pages/TedarikciPage";
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
+import BirimAdminPanel from "./pages/BirimAdminPanel";
 
 function App() {
   const [aktifKullanici, setAktifKullanici] = useState(
@@ -90,6 +91,15 @@ function App() {
           element={
             <RequireAuth>
               <IslemLog />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/admin/birimler"
+          element={
+            <RequireAuth>
+              <BirimAdminPanel />
             </RequireAuth>
           }
         />

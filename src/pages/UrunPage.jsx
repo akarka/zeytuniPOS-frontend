@@ -10,13 +10,13 @@ function UrunPage() {
   const [duzenlenecekUrun, setDuzenlenecekUrun] = useState(null);
   const [duzenlenenId, setDuzenlenenId] = useState(null); // hangi satırın altında form açılacak
   const [editForm, setEditForm] = useState({
-    ad: "",
+    urunAdi: "",
     satisFiyati: "",
     altId: "",
     birimId: "",
   });
   const [urunler, setUrunler] = useState([]);
-  const [ad, setAd] = useState("");
+  const [urunAdi, setUrunAdi] = useState("");
   const [satisFiyati, setSatisFiyati] = useState("");
   const [altId, setAltId] = useState("");
   const [altKate, setAltKate] = useState([]);
@@ -68,20 +68,20 @@ function UrunPage() {
   const handleEdit = (urun) => {
     setDuzenlenenId(urun.id);
     setEditForm({
-      ad: urun.ad,
+      urunAdi: urun.ad,
       satisFiyati: urun.satisFiyati,
       altId: urun.altId,
       birimId: urun.birimId,
     });
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (urunId) => {
     if (window.confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
       api
-        .delete(`/urunler/${id}`)
+        .delete(`/urunler/${urunId}`)
         .then(() => {
           alert("Ürün silindi.");
-          setUrunler((prev) => prev.filter((u) => u.id !== id));
+          setUrunler((prev) => prev.filter((u) => u.id !== urunId));
         })
         .catch((err) => console.error("Silme hatası:", err));
     }
@@ -91,7 +91,7 @@ function UrunPage() {
     e.preventDefault();
 
     const submit = {
-      ad,
+      ad: urunAdi,
       satisFiyati: parseFloat(satisFiyati),
       altId: parseFloat(altId),
       birimId: parseFloat(birimId),
@@ -107,7 +107,7 @@ function UrunPage() {
       }
 
       // reset form
-      setAd("");
+      setUrunAdi("");
       setSatisFiyati("");
       setAltId("");
       setBirimId("");
@@ -131,8 +131,8 @@ function UrunPage() {
         <h2>Yeni Ürün Ekle</h2>
         <InputField
           label="Ürün İsmi"
-          value={ad}
-          onChange={(e) => setAd(e.target.value)}
+          value={urunAdi}
+          onChange={(e) => setUrunAdi(e.target.value)}
           placeholder="Örn: Ezine Peyniri"
         />
 
