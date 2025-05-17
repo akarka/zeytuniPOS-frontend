@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
 import BirimAdminPanel from "./pages/BirimAdminPanel";
 import AltKategoriAdminPanel from "./pages/AltKategoriAdminPanel";
+import UrunKategorileriAdminPanel from "./pages/UrunKategorileriAdminPanel";
 
 function App() {
   const [aktifKullanici, setAktifKullanici] = useState(
@@ -110,6 +111,15 @@ function App() {
           element={
             <RequireAuth>
               <AltKategoriAdminPanel />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/admin/urunkategorileri"
+          element={
+            <RequireAuth>
+              <UrunKategorileriAdminPanel />
             </RequireAuth>
           }
         />

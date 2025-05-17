@@ -1,239 +1,207 @@
-import { useState, useEffect } from "react";
-import React from "react";
-import { Link } from "react-router-dom";
-import api from "../services/api";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import InputField from "../components/InputField";
 import SelectField from "../components/SelectField";
-import SatirForm from "../components/SatirForm";
+import { Link } from "react-router-dom";
 
 function UrunPage() {
-  const [duzenlenecekUrun, setDuzenlenecekUrun] = useState(null);
-  const [duzenlenenId, setDuzenlenenId] = useState(null); // hangi satırın altında form açılacak
-  const [editForm, setEditForm] = useState({
-    urunAdi: "",
-    satisFiyati: "",
-    altId: "",
-    birimId: "",
-  });
   const [urunler, setUrunler] = useState([]);
-  const [urunAdi, setUrunAdi] = useState("");
-  const [satisFiyati, setSatisFiyati] = useState("");
-  const [altId, setAltId] = useState("");
-  const [altKate, setAltKate] = useState([]);
+  const [birimSecenekleri, setBirimSecenekleri] = useState([]);
+  const [altKategoriSecenekleri, setAltKategoriSecenekleri] = useState([]);
+
+  const [yeniUrunAdi, setYeniUrunAdi] = useState("");
   const [birimId, setBirimId] = useState("");
-  const [birim, setBirim] = useState([]);
+  const [altKategoriId, setAltKategoriId] = useState("");
+
+  const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {
-    api
-      .get("/urunler")
-      .then((res) => {
-        console.log("Ürünler geldi:", res.data);
-        setUrunler(res.data);
-      })
-      .catch((err) => console.error("Ürün çekme hatası:", err));
-  }, []);
+    fetchUrunler();
 
-  useEffect(() => {
-    api
-      .get("/birimler")
-      .then((res) => {
-        console.log("Birimler geldi:", res.data);
-
-        const donustur = res.data.map((birim) => ({
-          id: birim.id,
-          label: birim.ad, // ad → label
-        }));
-
-        setBirim(donustur);
-      })
-      .catch((err) => console.error("Birim cekme hatasi:", err));
-  }, []);
-
-  useEffect(() => {
-    api
-      .get("/altkategoriler")
-      .then((res) => {
-        console.log("AltKategoriler geldi:", res.data);
-
-        const donustur = res.data.map((altKate) => ({
-          id: altKate.id,
-          label: altKate.ad, // ad → label
-        }));
-
-        setAltKate(donustur);
-      })
-      .catch((err) => console.error("Alt Kategori cekme hatasi:", err));
-  }, []);
-
-  const handleEdit = (urun) => {
-    setDuzenlenenId(urun.id);
-    setEditForm({
-      urunAdi: urun.ad,
-      satisFiyati: urun.satisFiyati,
-      altId: urun.altId,
-      birimId: urun.birimId,
+    axios.get("/api/birimler/dto").then((res) => {
+      const opts = res.data.map((b) => ({
+        id: b.birimId,
+        label: b.birimAdi,
+      }));
+      setBirimSecenekleri(opts);
     });
+
+    axios.get("/api/altkategoriler/dto").then((res) => {
+      const opts = res.data.map((a) => ({
+        id: a.altkId,
+        label: a.altkAdi,
+      }));
+      setAltKategoriSecenekleri(opts);
+    });
+  }, []);
+
+  const fetchUrunler = async () => {
+    const res = await axios.get("/api/urunler/dto");
+    setUrunler(res.data);
   };
 
-  const handleDelete = (urunId) => {
-    if (window.confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
-      api
-        .delete(`/urunler/${urunId}`)
-        .then(() => {
-          alert("Ürün silindi.");
-          setUrunler((prev) => prev.filter((u) => u.id !== urunId));
-        })
-        .catch((err) => console.error("Silme hatası:", err));
-    }
+  const handleEkle = async () => {
+    if (!yeniUrunAdi.trim() || !birimId || !altKategoriId) return;
+
+    await axios.post("/api/urunler/dto", {
+      urunAdi: yeniUrunAdi,
+      birimId: parseInt(birimId, 10),
+      altKategoriId: parseInt(altKategoriId, 10),
+    });
+
+    setYeniUrunAdi("");
+    setBirimId("");
+    setAltKategoriId("");
+    fetchUrunler();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleGuncelle = async () => {
+    await axios.put("/api/urunler/dto", duzenlenen);
+    setDuzenlenen(null);
+    fetchUrunler();
+  };
 
-    const submit = {
-      ad: urunAdi,
-      satisFiyati: parseFloat(satisFiyati),
-      altId: parseFloat(altId),
-      birimId: parseFloat(birimId),
-    };
-
+  const handleSil = async (id) => {
     try {
-      if (duzenlenecekUrun) {
-        await api.put(`/urunler/${duzenlenecekUrun.id}`, submit);
-        alert("Ürün güncellendi.");
-      } else {
-        await api.post("/urunler", submit);
-        alert("Ürün eklendi.");
-      }
-
-      // reset form
-      setUrunAdi("");
-      setSatisFiyati("");
-      setAltId("");
-      setBirimId("");
-      setDuzenlenecekUrun(null);
-
-      // refresh
-      const res = await api.get("/urunler");
-      setUrunler(res.data);
+      await axios.delete(`/api/urunler/${id}`);
+      fetchUrunler();
     } catch (error) {
-      alert("Hata: " + error.message);
+      console.error("Silme hatası:", error.response?.data || error.message);
     }
+  };
+
+  const labelGetir = (id, from) => {
+    const secenek = from.find((s) => s.id === id);
+    return secenek ? secenek.label : id;
   };
 
   return (
-    <div>
-      <nav>
-        <Link to="/">Ana Sayfa</Link>
+    <div className="p-4 max-w-4xl mx-auto">
+      <nav className="mb-4">
+        <Link to="/" className="text-blue-600 underline">
+          Ana Sayfa
+        </Link>
       </nav>
 
-      <form onSubmit={handleSubmit}>
-        <h2>Yeni Ürün Ekle</h2>
+      <h2 className="text-xl font-bold mb-4">Ürün Yönetimi</h2>
+
+      <div className="flex gap-2 mb-6">
         <InputField
-          label="Ürün İsmi"
-          value={urunAdi}
-          onChange={(e) => setUrunAdi(e.target.value)}
-          placeholder="Örn: Ezine Peyniri"
+          label=""
+          value={yeniUrunAdi}
+          onChange={(e) => setYeniUrunAdi(e.target.value)}
+          placeholder="Ürün adı"
         />
-
-        <InputField
-          label="Fiyat (₺)"
-          type="number"
-          value={satisFiyati}
-          onChange={(e) => setSatisFiyati(e.target.value)}
-          placeholder="Örn: 250"
-        />
-
         <SelectField
-          label="Alt Kategori"
-          value={altId}
-          onChange={(e) => setAltId(e.target.value)}
-          options={altKate}
-        />
-
-        <SelectField
-          label="Birim"
+          label=""
           value={birimId}
           onChange={(e) => setBirimId(e.target.value)}
-          options={birim}
+          options={birimSecenekleri}
         />
-
-        <button type="submit" style={{ padding: "10px 20px" }}>
-          Kaydet
+        <SelectField
+          label=""
+          value={altKategoriId}
+          onChange={(e) => setAltKategoriId(e.target.value)}
+          options={altKategoriSecenekleri}
+        />
+        <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
+          Ekle
         </button>
-      </form>
+      </div>
 
-      <table>
+      <table className="w-full border">
         <thead>
-          <tr>
-            <th style={{ width: "100px" }}>Ad</th>
-            <th style={{ width: "100px" }}>ID</th>
-            <th style={{ width: "100px" }}>Fiyat</th>
-            <th style={{ width: "100px" }}>Alt Kategori</th>
-            <th style={{ width: "100px" }}>Birim</th>
-            <th style={{ width: "200px" }}></th>
+          <tr className="bg-gray-100 text-center">
+            <th className="p-2 border">Ürün Adı</th>
+            <th className="p-2 border">Birim</th>
+            <th className="p-2 border">Alt Kategori</th>
+            <th className="p-2 border">İşlemler</th>
           </tr>
         </thead>
         <tbody>
-          {urunler.map((urun) => (
-            <React.Fragment key={urun.id}>
-              <tr>
-                <td>{urun.id}</td>
-                <td>{urun.ad}</td>
-                <td>{urun.satisFiyati}</td>
-                <td>{urun.altId}</td>
-                <td>{urun.birimId}</td>
-                <td>
-                  <button onClick={() => handleEdit(urun)} title="Düzenle">
-                    🖉
-                  </button>
-                  <button onClick={() => handleDelete(urun.id)} title="Sil">
-                    🗑
-                  </button>
-                </td>
-              </tr>
-
-              {/* satırın altına satirform */}
-              {duzenlenenId === urun.id && (
-                <SatirForm
-                  initialData={editForm}
-                  fields={[
-                    { name: "ad", placeholder: "Ürün Adı" },
-                    {
-                      name: "satisFiyati",
-                      type: "number",
-                      placeholder: "Fiyat",
-                    },
-                    {
-                      name: "altId",
-                      type: "select",
-                      placeholder: "Alt Kategori",
-                      options: altKate,
-                    },
-                    {
-                      name: "birimId",
-                      type: "select",
-                      placeholder: "Birim",
-                      options: birim,
-                    },
-                  ]}
-                  onCancel={() => setDuzenlenenId(null)}
-                  onSubmit={async (form) => {
-                    await api.put(`/urunler/${urun.id}`, {
-                      ...form,
-                      satisFiyati: parseFloat(form.satisFiyati),
-                      altId: parseInt(form.altId),
-                      birimId: parseInt(form.birimId),
-                    });
-                    alert("Ürün güncellendi.");
-                    setDuzenlenenId(null);
-
-                    const res = await api.get("/urunler");
-                    setUrunler(res.data);
-                  }}
-                />
-              )}
-            </React.Fragment>
+          {urunler.map((u) => (
+            <tr key={u.urunId} className="text-center">
+              <td className="border p-2">
+                {duzenlenen?.urunId === u.urunId ? (
+                  <input
+                    value={duzenlenen.urunAdi}
+                    onChange={(e) =>
+                      setDuzenlenen({ ...duzenlenen, urunAdi: e.target.value })
+                    }
+                    className="border p-1"
+                  />
+                ) : (
+                  u.urunAdi
+                )}
+              </td>
+              <td className="border p-2">
+                {duzenlenen?.urunId === u.urunId ? (
+                  <SelectField
+                    label=""
+                    value={duzenlenen.birimId}
+                    onChange={(e) =>
+                      setDuzenlenen({
+                        ...duzenlenen,
+                        birimId: parseInt(e.target.value, 10),
+                      })
+                    }
+                    options={birimSecenekleri}
+                  />
+                ) : (
+                  labelGetir(u.birimId, birimSecenekleri)
+                )}
+              </td>
+              <td className="border p-2">
+                {duzenlenen?.urunId === u.urunId ? (
+                  <SelectField
+                    label=""
+                    value={duzenlenen.altKategoriId}
+                    onChange={(e) =>
+                      setDuzenlenen({
+                        ...duzenlenen,
+                        altKategoriId: parseInt(e.target.value, 10),
+                      })
+                    }
+                    options={altKategoriSecenekleri}
+                  />
+                ) : (
+                  labelGetir(u.altKategoriId, altKategoriSecenekleri)
+                )}
+              </td>
+              <td className="border p-2 space-x-2">
+                {duzenlenen?.urunId === u.urunId ? (
+                  <>
+                    <button
+                      className="bg-blue-500 text-white px-2"
+                      onClick={handleGuncelle}
+                    >
+                      Kaydet
+                    </button>
+                    <button
+                      className="bg-gray-300 px-2"
+                      onClick={() => setDuzenlenen(null)}
+                    >
+                      İptal
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="bg-yellow-500 text-white px-2"
+                      onClick={() => setDuzenlenen(u)}
+                    >
+                      Düzenle
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-2"
+                      onClick={() => handleSil(u.urunId)}
+                    >
+                      Sil
+                    </button>
+                  </>
+                )}
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>

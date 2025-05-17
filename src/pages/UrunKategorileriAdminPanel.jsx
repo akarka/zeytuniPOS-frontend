@@ -1,43 +1,50 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import InputField from "../components/InputField";
+import { Link } from "react-router-dom";
 
-function BirimAdminPanel() {
-  const [birimler, setBirimler] = useState([]);
-  const [yeniBirim, setYeniBirim] = useState("");
-  const [duzenlenenBirim, setDuzenlenenBirim] = useState(null);
+function UrunKategorileriAdminPanel() {
+  const [kategoriler, setKategoriler] = useState([]);
+  const [yeniKategori, setYeniKategori] = useState("");
+  const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {
-    fetchBirimler();
+    fetchKategoriler();
   }, []);
 
-  const fetchBirimler = async () => {
-    const res = await axios.get("/api/birimler/dto");
-    setBirimler(res.data);
+  const fetchKategoriler = async () => {
+    const res = await axios.get("/api/urunkategorileri/dto");
+    setKategoriler(res.data);
   };
 
   const handleEkle = async () => {
-    if (!yeniBirim.trim()) return;
+    if (!yeniKategori.trim()) return;
 
-    await axios.post("/api/birimler/dto", {
-      birimAdi: yeniBirim,
+    await axios.post("/api/urunkategorileri/dto", {
+      urunKategoriAdi: yeniKategori,
     });
 
-    setYeniBirim("");
-    fetchBirimler();
+    setYeniKategori("");
+    fetchKategoriler();
   };
 
   const handleGuncelle = async () => {
-    await axios.put("/api/birimler/dto", duzenlenenBirim);
-    setDuzenlenenBirim(null);
-    fetchBirimler();
+    try {
+      await axios.put("/api/urunkategorileri/dto", duzenlenen);
+      setDuzenlenen(null);
+      fetchKategoriler();
+    } catch (error) {
+      console.error(
+        "Güncelleme hatası:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   const handleSil = async (id) => {
     try {
-      await axios.delete(`/api/birimler/${id}`);
-      fetchBirimler();
+      await axios.delete(`/api/urunkategorileri/${id}`);
+      fetchKategoriler();
     } catch (error) {
       console.error("Silme hatası:", error.response?.data || error.message);
     }
@@ -51,14 +58,14 @@ function BirimAdminPanel() {
         </Link>
       </nav>
 
-      <h2 className="text-xl font-bold mb-4">Birim Yönetimi</h2>
+      <h2 className="text-xl font-bold mb-4">Ürün Kategori Yönetimi</h2>
 
-      <div className="flex gap-2 mb-6 items-end">
+      <div className="flex gap-2 mb-6">
         <InputField
-          label=""
-          value={yeniBirim}
-          onChange={(e) => setYeniBirim(e.target.value)}
-          placeholder="Yeni birim adı"
+          label="Yeni Kategori Adı"
+          value={yeniKategori}
+          onChange={(e) => setYeniKategori(e.target.value)}
+          placeholder="Kategori adı"
         />
         <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
           Ekle
@@ -68,32 +75,31 @@ function BirimAdminPanel() {
       <table className="w-full border">
         <thead>
           <tr className="bg-gray-100 text-center">
-            <th className="p-2 border">Birim Adı</th>
+            <th className="p-2 border">Kategori Adı</th>
             <th className="p-2 border">İşlemler</th>
           </tr>
         </thead>
         <tbody>
-          {birimler.map((b) => (
-            <tr key={b.birimId} className="text-center">
+          {kategoriler.map((kat) => (
+            <tr key={kat.urunKategoriId} className="text-center">
               <td className="border p-2">
-                {duzenlenenBirim?.birimId === b.birimId ? (
-                  <InputField
-                    label=""
-                    value={duzenlenenBirim.birimAdi}
+                {duzenlenen?.urunKategoriId === kat.urunKategoriId ? (
+                  <input
+                    value={duzenlenen.urunKategoriAdi}
                     onChange={(e) =>
-                      setDuzenlenenBirim({
-                        ...duzenlenenBirim,
-                        birimAdi: e.target.value,
+                      setDuzenlenen({
+                        ...duzenlenen,
+                        urunKategoriAdi: e.target.value,
                       })
                     }
-                    placeholder="Birim adı"
+                    className="border p-1 w-full"
                   />
                 ) : (
-                  b.birimAdi
+                  kat.urunKategoriAdi
                 )}
               </td>
               <td className="border p-2 space-x-2">
-                {duzenlenenBirim?.birimId === b.birimId ? (
+                {duzenlenen?.urunKategoriId === kat.urunKategoriId ? (
                   <>
                     <button
                       className="bg-blue-500 text-white px-2"
@@ -103,7 +109,7 @@ function BirimAdminPanel() {
                     </button>
                     <button
                       className="bg-gray-300 px-2"
-                      onClick={() => setDuzenlenenBirim(null)}
+                      onClick={() => setDuzenlenen(null)}
                     >
                       İptal
                     </button>
@@ -112,13 +118,13 @@ function BirimAdminPanel() {
                   <>
                     <button
                       className="bg-yellow-500 text-white px-2"
-                      onClick={() => setDuzenlenenBirim(b)}
+                      onClick={() => setDuzenlenen(kat)}
                     >
                       Düzenle
                     </button>
                     <button
                       className="bg-red-500 text-white px-2"
-                      onClick={() => handleSil(b.birimId)}
+                      onClick={() => handleSil(kat.urunKategoriId)}
                     >
                       Sil
                     </button>
@@ -133,4 +139,4 @@ function BirimAdminPanel() {
   );
 }
 
-export default BirimAdminPanel;
+export default UrunKategorileriAdminPanel;

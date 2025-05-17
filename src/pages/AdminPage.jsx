@@ -26,11 +26,18 @@ function AdminPage() {
           to="/admin/birimler"
           style={{ marginRight: "20px", fontSize: "18px" }}
         >
-          BirimAdminPanel
+          Birim Panel
+        </Link>
+
+        <Link
+          to="/admin/urunkategorileri"
+          style={{ marginRight: "20px", fontSize: "18px" }}
+        >
+          Ürün Kategori Panel
         </Link>
 
         <Link to="/admin/altkategoriler" style={{ fontSize: "18px" }}>
-          AltKategoriAdminPanel
+          Alt Kategori Panel
         </Link>
       </div>
     </div>
