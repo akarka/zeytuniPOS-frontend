@@ -22,8 +22,15 @@ function AdminPage() {
           İşlem Geçmişi
         </Link>
 
-        <Link to="/admin/birimler" style={{ fontSize: "18px" }}>
+        <Link
+          to="/admin/birimler"
+          style={{ marginRight: "20px", fontSize: "18px" }}
+        >
           BirimAdminPanel
+        </Link>
+
+        <Link to="/admin/altkategoriler" style={{ fontSize: "18px" }}>
+          AltKategoriAdminPanel
         </Link>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 function BirimAdminPanel() {
@@ -12,8 +13,8 @@ function BirimAdminPanel() {
 
   const fetchBirimler = async () => {
     const res = await axios.get("/api/birimler/dto");
-    console.log("Gelen veri:", res.data); // 🔍 Burayı kontrol et
-    setBirimler(res.data); // belki res.data.content gerekebilir
+    console.log("Gelen veri:", res.data);
+    setBirimler(res.data);
   };
 
   const handleEkle = async () => {
@@ -36,6 +37,9 @@ function BirimAdminPanel() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
+      <nav>
+        <Link to="/">Ana Sayfa</Link>
+      </nav>
       <h2 className="text-xl font-bold mb-4">Birim Yönetimi</h2>
 
       <div className="flex gap-2 mb-6">
@@ -53,7 +57,6 @@ function BirimAdminPanel() {
       <table className="w-full border">
         <thead>
           <tr className="bg-gray-100">
-            <th className="p-2 border">ID</th>
             <th className="p-2 border">Adı</th>
             <th className="p-2 border">İşlemler</th>
           </tr>

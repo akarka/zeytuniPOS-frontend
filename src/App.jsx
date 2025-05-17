@@ -9,6 +9,7 @@ import TedarikciPage from "./pages/TedarikciPage";
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
 import BirimAdminPanel from "./pages/BirimAdminPanel";
+import AltKategoriAdminPanel from "./pages/AltKategoriAdminPanel";
 
 function App() {
   const [aktifKullanici, setAktifKullanici] = useState(
@@ -100,6 +101,15 @@ function App() {
           element={
             <RequireAuth>
               <BirimAdminPanel />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/admin/altkategoriler"
+          element={
+            <RequireAuth>
+              <AltKategoriAdminPanel />
             </RequireAuth>
           }
         />
