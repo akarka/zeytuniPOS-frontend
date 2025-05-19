@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import UrunPage from "./pages/UrunPage";
-import SatisEkle from "./pages/SatisEkle";
+import SatisPage from "./pages/SatisPage";
 import IslemLog from "./pages/IslemLog";
 import TedarikciPage from "./pages/TedarikciPage";
 import LoginPage from "./pages/LoginPage";
@@ -74,7 +74,7 @@ function App() {
           path="/satis"
           element={
             <RequireAuth>
-              <SatisEkle />
+              <SatisPage />
             </RequireAuth>
           }
         />
