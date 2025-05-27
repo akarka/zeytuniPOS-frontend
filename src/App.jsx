@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 
 import UrunPage from "./pages/UrunPage";
 import SatisPage from "./pages/SatisPage";
-import IslemLog from "./pages/IslemLog";
+import IslemLogAdminPanel from "./pages/IslemLogAdminPanel";
 import TedarikciPage from "./pages/TedarikciPage";
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
 import BirimAdminPanel from "./pages/BirimAdminPanel";
 import AltKategoriAdminPanel from "./pages/AltKategoriAdminPanel";
 import UrunKategorileriAdminPanel from "./pages/UrunKategorileriAdminPanel";
+import UrunTedarikciAdminPanel from "./pages/UrunTedarikciAdminPanel";
+import TedarikciAltKategoriAdminPanel from "./pages/TedarikciAltKategoriAdminPanel";
 
 function App() {
   const [aktifKullanici, setAktifKullanici] = useState(
@@ -51,7 +53,6 @@ function App() {
           path="/login"
           element={<LoginPage setAktifKullanici={setAktifKullanici} />}
         />
-
         <Route
           path="/"
           element={
@@ -60,7 +61,6 @@ function App() {
             </RequireAuth>
           }
         />
-
         <Route
           path="/urun"
           element={
@@ -69,7 +69,6 @@ function App() {
             </RequireAuth>
           }
         />
-
         <Route
           path="/satis"
           element={
@@ -78,7 +77,6 @@ function App() {
             </RequireAuth>
           }
         />
-
         <Route
           path="/tedarik"
           element={
@@ -87,16 +85,14 @@ function App() {
             </RequireAuth>
           }
         />
-
         <Route
           path="/islemlog"
           element={
             <RequireAuth>
-              <IslemLog />
+              <IslemLogAdminPanel />
             </RequireAuth>
           }
         />
-
         <Route
           path="/admin/birimler"
           element={
@@ -105,12 +101,27 @@ function App() {
             </RequireAuth>
           }
         />
-
         <Route
           path="/admin/altkategoriler"
           element={
             <RequireAuth>
               <AltKategoriAdminPanel />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/uruntedarikci"
+          element={
+            <RequireAuth>
+              <UrunTedarikciAdminPanel />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/tedarikcialtkategori"
+          element={
+            <RequireAuth>
+              <TedarikciAltKategoriAdminPanel />
             </RequireAuth>
           }
         />

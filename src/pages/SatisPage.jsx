@@ -7,11 +7,9 @@ import { Link } from "react-router-dom";
 function SatisPage() {
   const [satislar, setSatislar] = useState([]);
   const [urunSecenekleri, setUrunSecenekleri] = useState([]);
-
   const [yeniUrunId, setYeniUrunId] = useState("");
   const [yeniMiktar, setYeniMiktar] = useState("");
   const [yeniFiyat, setYeniFiyat] = useState("");
-
   const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {

@@ -8,11 +8,10 @@ function UrunPage() {
   const [urunler, setUrunler] = useState([]);
   const [birimSecenekleri, setBirimSecenekleri] = useState([]);
   const [altKategoriSecenekleri, setAltKategoriSecenekleri] = useState([]);
-
   const [yeniUrunAdi, setYeniUrunAdi] = useState("");
   const [birimId, setBirimId] = useState("");
+  const [guncelSatisFiyati, setGuncelSatisFiyati] = useState("");
   const [altKategoriId, setAltKategoriId] = useState("");
-
   const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {
@@ -46,11 +45,13 @@ function UrunPage() {
     await axios.post("/api/urunler/dto", {
       urunAdi: yeniUrunAdi,
       birimId: parseInt(birimId, 10),
+      guncelSatisFiyati: parseInt(guncelSatisFiyati, 10),
       altKategoriId: parseInt(altKategoriId, 10),
     });
 
     setYeniUrunAdi("");
     setBirimId("");
+    setGuncelSatisFiyati("");
     setAltKategoriId("");
     fetchUrunler();
   };
@@ -98,6 +99,12 @@ function UrunPage() {
           onChange={(e) => setBirimId(e.target.value)}
           options={birimSecenekleri}
         />
+        <InputField
+          label=""
+          value={guncelSatisFiyati}
+          onChange={(e) => setGuncelSatisFiyati(e.target.value)}
+          placeholder="Fiyat"
+        />
         <SelectField
           label=""
           value={altKategoriId}
@@ -114,6 +121,7 @@ function UrunPage() {
           <tr className="bg-gray-100 text-center">
             <th className="p-2 border">Ürün Adı</th>
             <th className="p-2 border">Birim</th>
+            <th className="p-2 border">Satış Fiyatı</th>
             <th className="p-2 border">Alt Kategori</th>
             <th className="p-2 border">İşlemler</th>
           </tr>
@@ -149,6 +157,23 @@ function UrunPage() {
                   />
                 ) : (
                   labelGetir(u.birimId, birimSecenekleri)
+                )}
+              </td>
+              <td className="border p-2">
+                {duzenlenen?.urunId === u.urunId ? (
+                  <InputField
+                    label=""
+                    type="number"
+                    value={duzenlenen.guncelSatisFiyati}
+                    onChange={(e) =>
+                      setDuzenlenen({
+                        ...duzenlenen,
+                        guncelSatisFiyati: parseFloat(e.target.value),
+                      })
+                    }
+                  />
+                ) : (
+                  u.guncelSatisFiyati?.toFixed(2) + " ₺"
                 )}
               </td>
               <td className="border p-2">
