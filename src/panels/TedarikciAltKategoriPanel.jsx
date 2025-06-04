@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../util/api";
 import SelectField from "../components/SelectField";
 import { Link } from "react-router-dom";
 
@@ -12,14 +12,14 @@ function TedarikciAltKategoriAdminPanel() {
 
   useEffect(() => {
     fetchData();
-    axios
+    api
       .get("/api/altkategoriler/dto")
       .then((res) =>
         setAltKategoriler(
           res.data.map((a) => ({ id: a.altkId, label: a.altkAdi }))
         )
       );
-    axios
+    api
       .get("/api/tedarikciler/dto")
       .then((res) =>
         setTedarikciler(
@@ -29,18 +29,18 @@ function TedarikciAltKategoriAdminPanel() {
   }, []);
 
   const fetchData = async () => {
-    const res = await axios.get("/api/tedarikcialtkategori/dto");
+    const res = await api.get("/api/tedarikcialtkategori/dto");
     setVeriler(res.data);
   };
 
   const handleEkle = async () => {
-    await axios.post("/api/tedarikcialtkategori/dto", yeni);
+    await api.post("/api/tedarikcialtkategori/dto", yeni);
     setYeni({ altKategoriId: "", tedarikciId: "" });
     fetchData();
   };
 
   const handleGuncelle = async () => {
-    await axios.put(
+    await api.put(
       `/api/tedarikcialtkategori/dto/${duzenlenen.tedarikciAltKategoriId}`,
       duzenlenen
     );
@@ -49,36 +49,28 @@ function TedarikciAltKategoriAdminPanel() {
   };
 
   const handleSil = async (id) => {
-    await axios.delete(`/api/tedarikcialtkategori/${id}`);
+    await api.delete(`/api/tedarikcialtkategori/${id}`);
     fetchData();
   };
 
   const label = (id, from) => from.find((x) => x.id === id)?.label || id;
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <Link to="/" className="text-blue-600 underline">
-        Ana Sayfa
-      </Link>
-      <h2 className="text-xl font-bold mb-4">
-        Tedarikçi - Alt Kategori Eşleşmeleri
-      </h2>
-
-      <div className="flex gap-2 mb-6 items-end">
-        <SelectField
-          value={yeni.altKategoriId}
-          onChange={(e) => setYeni({ ...yeni, altKategoriId: e.target.value })}
-          options={altKategoriler}
-        />
-        <SelectField
-          value={yeni.tedarikciId}
-          onChange={(e) => setYeni({ ...yeni, tedarikciId: e.target.value })}
-          options={tedarikciler}
-        />
-        <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
-          Ekle
-        </button>
-      </div>
+    <div className="flex gap-2 mb-6 items-end">
+      <SelectField
+        label="Tedarikçi - Ürün Tipi İlişkisi Kur"
+        value={yeni.altKategoriId}
+        onChange={(e) => setYeni({ ...yeni, altKategoriId: e.target.value })}
+        options={altKategoriler}
+      />
+      <SelectField
+        value={yeni.tedarikciId}
+        onChange={(e) => setYeni({ ...yeni, tedarikciId: e.target.value })}
+        options={tedarikciler}
+      />
+      <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
+        Ekle
+      </button>
 
       <table className="w-full border text-center">
         <thead>

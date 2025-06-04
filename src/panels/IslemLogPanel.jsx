@@ -1,25 +1,19 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../util/api";
 import { Link } from "react-router-dom";
 
 function IslemLogAdminPanel() {
   const [loglar, setLoglar] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/islemlog/dto").then((res) => {
+    api.get("/api/islemlog/dto").then((res) => {
       setLoglar(res.data);
     });
   }, []);
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
-      <nav className="mb-4">
-        <Link to="/" className="text-blue-600 underline">
-          Ana Sayfa
-        </Link>
-      </nav>
-
-      <h2 className="text-xl font-bold mb-4">İşlem Log Kayıtları</h2>
+      <h2 className="text-xl font-bold mb-4">İşlem Kayıtları</h2>
 
       <table className="w-full border text-center text-sm">
         <thead className="bg-gray-100">

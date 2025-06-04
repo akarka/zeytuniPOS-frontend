@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../util/api";
 import SelectField from "../components/SelectField";
+import InputField from "../components/InputField";
 
 function AltKategoriAdminPanel() {
   const [altKategoriler, setAltKategoriler] = useState([]);
@@ -15,7 +16,7 @@ function AltKategoriAdminPanel() {
   useEffect(() => {
     fetchAltKategoriler();
 
-    axios.get("/api/urunkategorileri/dto").then((res) => {
+    api.get("/api/urunkategorileri/dto").then((res) => {
       const dropdownOptions = res.data.map((k) => ({
         id: k.urunKategoriId,
         label: k.urunKategoriAdi,
@@ -25,7 +26,7 @@ function AltKategoriAdminPanel() {
   }, []);
 
   const fetchAltKategoriler = async () => {
-    const res = await axios.get("/api/altkategoriler/dto");
+    const res = await api.get("/api/altkategoriler/dto");
     setAltKategoriler(res.data);
   };
 
@@ -36,7 +37,7 @@ function AltKategoriAdminPanel() {
 
   const handleEkle = async () => {
     if (!yeniAltKategori.trim() || !kategoriId) return;
-    await axios.post("/api/altkategoriler/dto", {
+    await api.post("/api/altkategoriler/dto", {
       altkAdi: yeniAltKategori,
       urunKategoriId: parseInt(kategoriId, 10),
     });
@@ -47,7 +48,7 @@ function AltKategoriAdminPanel() {
 
   const handleSil = async (id) => {
     try {
-      await axios.delete(`/api/altkategoriler/${id}`);
+      await api.delete(`/api/altkategoriler/${id}`);
       fetchAltKategoriler();
     } catch (error) {
       console.error("Silme hatası:", error.response?.data || error.message);
@@ -56,7 +57,7 @@ function AltKategoriAdminPanel() {
 
   const handleGuncelle = async () => {
     try {
-      await axios.put("/api/altkategoriler/dto", duzenlenen);
+      await api.put("/api/altkategoriler/dto", duzenlenen);
       setDuzenlenen(null);
       fetchAltKategoriler();
     } catch (error) {
@@ -68,29 +69,23 @@ function AltKategoriAdminPanel() {
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <nav>
-        <Link to="/">Ana Sayfa</Link>
-      </nav>
-      <h2 className="text-xl font-bold mb-4">Alt Kategori Yönetimi</h2>
-
-      <div className="flex gap-2 mb-6">
-        <input
-          className="border p-2 flex-1"
-          value={yeniAltKategori}
-          onChange={(e) => setYeniAltKategori(e.target.value)}
-          placeholder="Alt kategori adı"
-        />
-        <SelectField
-          label=""
-          value={kategoriId}
-          onChange={(e) => setKategoriId(e.target.value)}
-          options={kategoriSecenekleri}
-        />
-        <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
-          Ekle
-        </button>
-      </div>
+    <div className="flex gap-2 mb-6">
+      <InputField
+        className="border p-2 flex-1"
+        label="Yeni Alt Kategori Ekle"
+        value={yeniAltKategori}
+        onChange={(e) => setYeniAltKategori(e.target.value)}
+        placeholder="Alt kategori adı"
+      />
+      <SelectField
+        label=""
+        value={kategoriId}
+        onChange={(e) => setKategoriId(e.target.value)}
+        options={kategoriSecenekleri}
+      />
+      <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
+        Ekle
+      </button>
 
       <table className="w-full border">
         <thead>

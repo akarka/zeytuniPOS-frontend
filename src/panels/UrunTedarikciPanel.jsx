@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../util/api";
 import SelectField from "../components/SelectField";
 import InputField from "../components/InputField";
 import { Link } from "react-router-dom";
@@ -18,12 +18,12 @@ function UrunTedarikciAdminPanel() {
 
   useEffect(() => {
     fetchData();
-    axios
+    api
       .get("/api/urunler/dto")
       .then((res) =>
         setUrunler(res.data.map((u) => ({ id: u.urunId, label: u.urunAdi })))
       );
-    axios
+    api
       .get("/api/tedarikciler/dto")
       .then((res) =>
         setTedarikciler(
@@ -33,12 +33,12 @@ function UrunTedarikciAdminPanel() {
   }, []);
 
   const fetchData = async () => {
-    const res = await axios.get("/api/uruntedarikci/dto");
+    const res = await api.get("/api/uruntedarikci/dto");
     setVeriler(res.data);
   };
 
   const handleEkle = async () => {
-    await axios.post("/api/uruntedarikci/dto", {
+    await api.post("/api/uruntedarikci/dto", {
       ...yeni,
       alisFiyati: parseFloat(yeni.alisFiyati),
     });
@@ -47,7 +47,7 @@ function UrunTedarikciAdminPanel() {
   };
 
   const handleGuncelle = async () => {
-    await axios.put(`/api/uruntedarikci/dto/${duzenlenen.urunTedarikciId}`, {
+    await api.put(`/api/uruntedarikci/dto/${duzenlenen.urunTedarikciId}`, {
       ...duzenlenen,
       alisFiyati: parseFloat(duzenlenen.alisFiyati),
     });
@@ -56,45 +56,39 @@ function UrunTedarikciAdminPanel() {
   };
 
   const handleSil = async (id) => {
-    await axios.delete(`/api/uruntedarikci/${id}`);
+    await api.delete(`/api/uruntedarikci/${id}`);
     fetchData();
   };
 
   const label = (id, from) => from.find((x) => x.id === id)?.label || id;
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <Link to="/" className="text-blue-600 underline">
-        Ana Sayfa
-      </Link>
-      <h2 className="text-xl font-bold mb-4">Ürün-Tedarikçi Eşleşmeleri</h2>
-
-      <div className="flex gap-2 mb-6 items-end">
-        <SelectField
-          value={yeni.urunId}
-          onChange={(e) => setYeni({ ...yeni, urunId: e.target.value })}
-          options={urunler}
-        />
-        <SelectField
-          value={yeni.tedarikciId}
-          onChange={(e) => setYeni({ ...yeni, tedarikciId: e.target.value })}
-          options={tedarikciler}
-        />
-        <InputField
-          placeholder="Alış Fiyatı"
-          type="number"
-          value={yeni.alisFiyati}
-          onChange={(e) => setYeni({ ...yeni, alisFiyati: e.target.value })}
-        />
-        <InputField
-          type="date"
-          value={yeni.tarih}
-          onChange={(e) => setYeni({ ...yeni, tarih: e.target.value })}
-        />
-        <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
-          Ekle
-        </button>
-      </div>
+    <div className="flex gap-2 mb-6 items-end">
+      <SelectField
+        label="Tedarikçi - Ürün"
+        value={yeni.urunId}
+        onChange={(e) => setYeni({ ...yeni, urunId: e.target.value })}
+        options={urunler}
+      />
+      <SelectField
+        value={yeni.tedarikciId}
+        onChange={(e) => setYeni({ ...yeni, tedarikciId: e.target.value })}
+        options={tedarikciler}
+      />
+      <InputField
+        placeholder="Alış Fiyatı"
+        type="number"
+        value={yeni.alisFiyati}
+        onChange={(e) => setYeni({ ...yeni, alisFiyati: e.target.value })}
+      />
+      <InputField
+        type="date"
+        value={yeni.tarih}
+        onChange={(e) => setYeni({ ...yeni, tarih: e.target.value })}
+      />
+      <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
+        Ekle
+      </button>
 
       <table className="w-full border text-center">
         <thead>

@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import InputField from "../components/InputField";
+import api from "../util/api";
 
 function BirimAdminPanel() {
   const [birimler, setBirimler] = useState([]);
   const [yeniBirim, setYeniBirim] = useState("");
-  const [duzenlenenBirim, setDuzenlenenBirim] = useState(null);
+  const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {
     fetchBirimler();
   }, []);
 
   const fetchBirimler = async () => {
-    const res = await axios.get("/api/birimler/dto");
+    const res = await api.get("/api/birimler/dto");
     setBirimler(res.data);
   };
 
   const handleEkle = async () => {
     if (!yeniBirim.trim()) return;
 
-    await axios.post("/api/birimler/dto", {
+    await api.post("/api/birimler/dto", {
       birimAdi: yeniBirim,
     });
 
@@ -29,14 +29,14 @@ function BirimAdminPanel() {
   };
 
   const handleGuncelle = async () => {
-    await axios.put("/api/birimler/dto", duzenlenenBirim);
-    setDuzenlenenBirim(null);
+    await api.put("/api/birimler/dto", duzenlenen);
+    setDuzenlenen(null);
     fetchBirimler();
   };
 
   const handleSil = async (id) => {
     try {
-      await axios.delete(`/api/birimler/${id}`);
+      await api.delete(`/api/birimler/${id}`);
       fetchBirimler();
     } catch (error) {
       console.error("Silme hatası:", error.response?.data || error.message);
@@ -44,26 +44,16 @@ function BirimAdminPanel() {
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <nav className="mb-4">
-        <Link to="/" className="text-blue-600 underline">
-          Ana Sayfa
-        </Link>
-      </nav>
-
-      <h2 className="text-xl font-bold mb-4">Birim Yönetimi</h2>
-
-      <div className="flex gap-2 mb-6 items-end">
-        <InputField
-          label=""
-          value={yeniBirim}
-          onChange={(e) => setYeniBirim(e.target.value)}
-          placeholder="Yeni birim adı"
-        />
-        <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
-          Ekle
-        </button>
-      </div>
+    <div className="flex gap-2 mb-6 items-end">
+      <InputField
+        label="Yeni Birim Ekle"
+        value={yeniBirim}
+        onChange={(e) => setYeniBirim(e.target.value)}
+        placeholder="Yeni birim adı"
+      />
+      <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
+        Ekle
+      </button>
 
       <table className="w-full border">
         <thead>
@@ -76,13 +66,13 @@ function BirimAdminPanel() {
           {birimler.map((b) => (
             <tr key={b.birimId} className="text-center">
               <td className="border p-2">
-                {duzenlenenBirim?.birimId === b.birimId ? (
+                {duzenlenen?.birimId === b.birimId ? (
                   <InputField
                     label=""
-                    value={duzenlenenBirim.birimAdi}
+                    value={duzenlenen.birimAdi}
                     onChange={(e) =>
-                      setDuzenlenenBirim({
-                        ...duzenlenenBirim,
+                      setDuzenlenen({
+                        ...duzenlenen,
                         birimAdi: e.target.value,
                       })
                     }
@@ -93,7 +83,7 @@ function BirimAdminPanel() {
                 )}
               </td>
               <td className="border p-2 space-x-2">
-                {duzenlenenBirim?.birimId === b.birimId ? (
+                {duzenlenen?.birimId === b.birimId ? (
                   <>
                     <button
                       className="bg-blue-500 text-white px-2"
@@ -103,7 +93,7 @@ function BirimAdminPanel() {
                     </button>
                     <button
                       className="bg-gray-300 px-2"
-                      onClick={() => setDuzenlenenBirim(null)}
+                      onClick={() => setDuzenlenen(null)}
                     >
                       İptal
                     </button>
@@ -112,7 +102,7 @@ function BirimAdminPanel() {
                   <>
                     <button
                       className="bg-yellow-500 text-white px-2"
-                      onClick={() => setDuzenlenenBirim(b)}
+                      onClick={() => setDuzenlenen(b)}
                     >
                       Düzenle
                     </button>

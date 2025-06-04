@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../util/api";
 import InputField from "../components/InputField";
 import SelectField from "../components/SelectField";
 import { Link } from "react-router-dom";
+
+const nowAsLocalDateTime = () => {
+  const now = new Date();
+  now.setSeconds(0, 0);
+  return now.toISOString().slice(0, 16);
+};
 
 function SatisPage() {
   const [satislar, setSatislar] = useState([]);
@@ -10,12 +16,13 @@ function SatisPage() {
   const [yeniUrunId, setYeniUrunId] = useState("");
   const [yeniMiktar, setYeniMiktar] = useState("");
   const [yeniFiyat, setYeniFiyat] = useState("");
+  const [yeniTarih, setYeniTarih] = useState(nowAsLocalDateTime()); //burada çağırılıyor
   const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {
     fetchSatislar();
 
-    axios.get("/api/urunler/dto").then((res) => {
+    api.get("/api/urunler/dto").then((res) => {
       const urunOpts = res.data.map((u) => ({
         id: u.urunId,
         label: u.urunAdi,
@@ -24,23 +31,15 @@ function SatisPage() {
     });
   }, []);
 
-  const nowAsLocalDateTime = () => {
-    const now = new Date();
-    now.setSeconds(0, 0);
-    return now.toISOString().slice(0, 16);
-  };
-
-  const [yeniTarih, setYeniTarih] = useState(nowAsLocalDateTime());
-
   const fetchSatislar = async () => {
-    const res = await axios.get("/api/satislar/dto");
+    const res = await api.get("/api/satislar/dto");
     setSatislar(res.data);
   };
 
   const handleEkle = async () => {
     if (!yeniUrunId || !yeniMiktar || !yeniTarih) return;
 
-    await axios.post("/api/satislar/dto", {
+    await api.post("/api/satislar/dto", {
       urunId: parseInt(yeniUrunId, 10),
       miktar: parseInt(yeniMiktar, 10),
       satisFiyati: yeniFiyat ? parseInt(yeniFiyat, 10) : null,
@@ -55,14 +54,14 @@ function SatisPage() {
   };
 
   const handleGuncelle = async () => {
-    await axios.put("/api/satislar/dto", duzenlenen);
+    await api.put("/api/satislar/dto", duzenlenen);
     setDuzenlenen(null);
     fetchSatislar();
   };
 
   const handleSil = async (id) => {
     try {
-      await axios.delete(`/api/satislar/${id}`);
+      await api.delete(`/api/satislar/${id}`);
       fetchSatislar();
     } catch (error) {
       console.error("Silme hatası:", error.response?.data || error.message);

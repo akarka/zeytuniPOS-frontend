@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../util/api";
 import InputField from "../components/InputField";
 import { Link } from "react-router-dom";
 
@@ -17,26 +17,26 @@ function TedarikciPage() {
   }, []);
 
   const fetchTedarikciler = async () => {
-    const res = await axios.get("/api/tedarikciler/dto");
+    const res = await api.get("/api/tedarikciler/dto");
     setTedarikciler(res.data);
   };
 
   const handleEkle = async () => {
     if (!yeni.tedarikciAdi.trim()) return;
 
-    await axios.post("/api/tedarikciler/dto", yeni);
+    await api.post("/api/tedarikciler/dto", yeni);
     setYeni({ tedarikciAdi: "", tedarikciIletisim: "", tedarikciAdres: "" });
     fetchTedarikciler();
   };
 
   const handleGuncelle = async () => {
-    await axios.put("/api/tedarikciler/dto", duzenlenen);
+    await api.put("/api/tedarikciler/dto", duzenlenen);
     setDuzenlenen(null);
     fetchTedarikciler();
   };
 
   const handleSil = async (id) => {
-    await axios.delete(`/api/tedarikciler/${id}`);
+    await api.delete(`/api/tedarikciler/${id}`);
     fetchTedarikciler();
   };
 

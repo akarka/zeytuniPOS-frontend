@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../util/api";
 import InputField from "../components/InputField";
 import SelectField from "../components/SelectField";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ function UrunPage() {
   useEffect(() => {
     fetchUrunler();
 
-    axios.get("/api/birimler/dto").then((res) => {
+    api.get("/api/birimler/dto").then((res) => {
       const opts = res.data.map((b) => ({
         id: b.birimId,
         label: b.birimAdi,
@@ -25,7 +25,7 @@ function UrunPage() {
       setBirimSecenekleri(opts);
     });
 
-    axios.get("/api/altkategoriler/dto").then((res) => {
+    api.get("/api/altkategoriler/dto").then((res) => {
       const opts = res.data.map((a) => ({
         id: a.altkId,
         label: a.altkAdi,
@@ -35,14 +35,14 @@ function UrunPage() {
   }, []);
 
   const fetchUrunler = async () => {
-    const res = await axios.get("/api/urunler/dto");
+    const res = await api.get("/api/urunler/dto");
     setUrunler(res.data);
   };
 
   const handleEkle = async () => {
     if (!yeniUrunAdi.trim() || !birimId || !altKategoriId) return;
 
-    await axios.post("/api/urunler/dto", {
+    await api.post("/api/urunler/dto", {
       urunAdi: yeniUrunAdi,
       birimId: parseInt(birimId, 10),
       guncelSatisFiyati: parseInt(guncelSatisFiyati, 10),
@@ -57,14 +57,14 @@ function UrunPage() {
   };
 
   const handleGuncelle = async () => {
-    await axios.put("/api/urunler/dto", duzenlenen);
+    await api.put("/api/urunler/dto", duzenlenen);
     setDuzenlenen(null);
     fetchUrunler();
   };
 
   const handleSil = async (id) => {
     try {
-      await axios.delete(`/api/urunler/${id}`);
+      await api.delete(`/api/urunler/${id}`);
       fetchUrunler();
     } catch (error) {
       console.error("Silme hatası:", error.response?.data || error.message);

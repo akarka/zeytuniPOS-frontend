@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../util/api";
 import InputField from "../components/InputField";
 import { Link } from "react-router-dom";
 
@@ -13,14 +13,14 @@ function UrunKategorileriAdminPanel() {
   }, []);
 
   const fetchKategoriler = async () => {
-    const res = await axios.get("/api/urunkategorileri/dto");
+    const res = await api.get("/api/urunkategorileri/dto");
     setKategoriler(res.data);
   };
 
   const handleEkle = async () => {
     if (!yeniKategori.trim()) return;
 
-    await axios.post("/api/urunkategorileri/dto", {
+    await api.post("/api/urunkategorileri/dto", {
       urunKategoriAdi: yeniKategori,
     });
 
@@ -30,7 +30,7 @@ function UrunKategorileriAdminPanel() {
 
   const handleGuncelle = async () => {
     try {
-      await axios.put("/api/urunkategorileri/dto", duzenlenen);
+      await api.put("/api/urunkategorileri/dto", duzenlenen);
       setDuzenlenen(null);
       fetchKategoriler();
     } catch (error) {
@@ -43,7 +43,7 @@ function UrunKategorileriAdminPanel() {
 
   const handleSil = async (id) => {
     try {
-      await axios.delete(`/api/urunkategorileri/${id}`);
+      await api.delete(`/api/urunkategorileri/${id}`);
       fetchKategoriler();
     } catch (error) {
       console.error("Silme hatası:", error.response?.data || error.message);
@@ -52,17 +52,9 @@ function UrunKategorileriAdminPanel() {
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <nav className="mb-4">
-        <Link to="/" className="text-blue-600 underline">
-          Ana Sayfa
-        </Link>
-      </nav>
-
-      <h2 className="text-xl font-bold mb-4">Ürün Kategori Yönetimi</h2>
-
       <div className="flex gap-2 mb-6">
         <InputField
-          label="Yeni Kategori Adı"
+          label="Yeni Kategori Ekle"
           value={yeniKategori}
           onChange={(e) => setYeniKategori(e.target.value)}
           placeholder="Kategori adı"
