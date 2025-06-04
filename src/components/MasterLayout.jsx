@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 function MasterLayout({ aktifKullanici, setAktifKullanici }) {
   const handleLogout = () => {
@@ -8,45 +7,22 @@ function MasterLayout({ aktifKullanici, setAktifKullanici }) {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        maxWidth: "1200px",
-        minWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="min-h-screen w-full bg-gray-50 text-gray-800 flex flex-col items-center">
       {/* Üst bar */}
-      <div
-        style={{
-          backgroundColor: "#f5f5f5",
-          padding: "10px 20px",
-          borderBottom: "1px solid #ccc",
-          position: "sticky",
-          margin: "0 auto",
-          top: 0,
-          zIndex: 1000,
-        }}
-      >
-        Hoş geldin, {aktifKullanici?.kullaniciAdi} |
-        <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
+      <header className="w-full max-w-screen-xl sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-6 py-4 flex justify-between items-center">
+        <span className="text-sm">
+          Hoş geldin, <strong>{aktifKullanici?.kullaniciAdi}</strong>
+        </span>
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
+        >
           Çıkış Yap
         </button>
-        <div className="p-4 max-w-6xl mx-auto">
-          <Link to="/" className="text-blue-600 underline">
-            Ana Sayfa
-          </Link>
-        </div>
-      </div>
+      </header>
 
-      {/* Ana içerik */}
-      <main
-        style={{
-          flex: 1,
-          padding: "24px",
-          backgroundColor: "#fafafa",
-        }}
-      >
+      {/* İçerik alanı */}
+      <main className="w-full max-w-screen-xl flex-1 px-6 py-8">
         <Outlet />
       </main>
     </div>

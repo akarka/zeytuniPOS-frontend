@@ -11,6 +11,8 @@ import YonetimKontrolPage from "./pages/YonetimKontrolPage";
 import MasterLayout from "./components/MasterLayout";
 
 function App() {
+  <h1 className="text-3xl text-green-600 font-bold">Tailwind v3 aktif ✅</h1>;
+
   const [aktifKullanici, setAktifKullanici] = useState(
     localStorage.getItem("aktifKullanici")
   );
