@@ -5,32 +5,21 @@ function PanelComponent({ panelConfig, baslik = "Panel" }) {
   const aktifPanel = panelConfig.find((p) => p.key === aktifKey);
 
   return (
-    <div style={{ padding: "0", margin: "0" }}>
-      {/* Sticky header — body'ye göre çalışır */}
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          backgroundColor: "#f8f8f8",
-          padding: "16px 20px",
-          borderBottom: "1px solid #ccc",
-        }}
-      >
-        <h2 style={{ margin: "0 0 10px 0" }}>{baslik}</h2>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+    <div className="flex flex-col gap-6">
+      {/* Başlık ve buton grubu */}
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-800">{baslik}</h2>
+        <div className="flex flex-wrap gap-2">
           {panelConfig.map((panel) => (
             <button
               key={panel.key}
               onClick={() => setAktifKey(panel.key)}
-              style={{
-                padding: "8px 12px",
-                backgroundColor: aktifKey === panel.key ? "#005c7a" : "#eee",
-                color: aktifKey === panel.key ? "#fff" : "#000",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                cursor: "pointer",
-              }}
+              className={`px-4 py-2 rounded border text-sm font-medium
+                ${
+                  aktifKey === panel.key
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
+                }`}
             >
               {panel.title}
             </button>
@@ -38,19 +27,8 @@ function PanelComponent({ panelConfig, baslik = "Panel" }) {
         </div>
       </div>
 
-      {/* Scrollable içerik — sticky dışında kalır */}
-      <div
-        style={{
-          marginTop: "20px",
-          minHeight: "55vh",
-          maxHeight: "55vh",
-          overflowY: "auto",
-          padding: "20px",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          backgroundColor: "#fff",
-        }}
-      >
+      {/* İçerik kutusu */}
+      <div className="border border-gray-300 rounded p-6 bg-white max-h-[60vh] overflow-y-auto shadow-sm">
         {aktifPanel?.component}
       </div>
     </div>

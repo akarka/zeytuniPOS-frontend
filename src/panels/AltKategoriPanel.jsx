@@ -69,24 +69,30 @@ function AltKategoriAdminPanel() {
   };
 
   return (
-    <div className="flex gap-2 mb-6">
-      <InputField
-        className="border p-2 flex-1"
-        label="Yeni Alt Kategori Ekle"
-        value={yeniAltKategori}
-        onChange={(e) => setYeniAltKategori(e.target.value)}
-        placeholder="Alt kategori adı"
-      />
-      <SelectField
-        label=""
-        value={kategoriId}
-        onChange={(e) => setKategoriId(e.target.value)}
-        options={kategoriSecenekleri}
-      />
-      <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
-        Ekle
-      </button>
+    <div className="space-y-6">
+      {/* Ekleme alanı */}
+      <div className="flex justify-center mt-12 mb-10">
+        <div className="flex flex-col items-center gap-2">
+          <InputField
+            label="Yeni Alt Kategori Ekle"
+            value={yeniAltKategori}
+            onChange={(e) => setYeniAltKategori(e.target.value)}
+            placeholder="Alt kategori adı"
+            width="w-64"
+          />
+          <SelectField
+            label=""
+            value={kategoriId}
+            onChange={(e) => setKategoriId(e.target.value)}
+            options={kategoriSecenekleri}
+          />
+          <button className="btn btn-success" onClick={handleEkle}>
+            Ekle
+          </button>
+        </div>
+      </div>
 
+      <div className="overflow-x-auto"></div>
       <table className="w-full border">
         <thead>
           <tr className="bg-gray-100 text-center">

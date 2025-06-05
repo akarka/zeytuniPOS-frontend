@@ -25,8 +25,14 @@ function AdminPage() {
 
         {/* Satır 3: Sadece Admin */}
         <div style={{ marginBottom: "20px" }}>
-          <Link to="/admin/yonetimkontrol" style={{ fontSize: "18px" }}>
+          <Link
+            to="/admin/yonetimkontrol"
+            style={{ marginRight: "20px", fontSize: "18px" }}
+          >
             Yönetimsel Araçlar
+          </Link>
+          <Link to="/admin/test" style={{ fontSize: "18px" }}>
+            testui
           </Link>
         </div>
       </div>

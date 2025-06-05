@@ -7,7 +7,7 @@ function MasterLayout({ aktifKullanici, setAktifKullanici }) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 text-gray-800 flex flex-col items-center">
+    <div className="min-h-screen w-full bg-gray-50 text-gray-800 flex flex-col items-center mt-6 mb-12">
       {/* Üst bar */}
       <header className="w-full max-w-screen-xl sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-6 py-4 flex justify-between items-center">
         <span className="text-sm">
@@ -22,7 +22,7 @@ function MasterLayout({ aktifKullanici, setAktifKullanici }) {
       </header>
 
       {/* İçerik alanı */}
-      <main className="w-full max-w-screen-xl flex-1 px-6 py-8">
+      <main className="w-48 flex-1 px-6 py-8">
         <Outlet />
       </main>
     </div>
