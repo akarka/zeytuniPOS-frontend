@@ -1,17 +1,18 @@
 function InputField({
   label,
-  type = "text",
+  type = 'text',
   value,
   onChange,
   placeholder,
-  className = "",
-  width = "w-full",
-  inputClassName = "",
+  className = '',
+  width = 'w-full',
+  inputClassName = '',
+  showTopLabel = true, // ← yeni kontrol
 }) {
   return (
     <div className={`form-control ${width}`}>
-      {label && (
-        <label className="block mb-1 text-sm font-medium text-gray-700">
+      {showTopLabel && label && (
+        <label className="mb-1 text-base font-semibold text-gray-700">
           <span className="label-text">{label}</span>
         </label>
       )}
@@ -19,8 +20,8 @@ function InputField({
         type={type}
         value={value}
         onChange={onChange}
-        placeholder={placeholder}
-        className={`input input-bordered input-sm ${inputClassName}`}
+        placeholder={placeholder || label}
+        className={`input input-bordered input-sm ${inputClassName} ${className}`}
       />
     </div>
   );

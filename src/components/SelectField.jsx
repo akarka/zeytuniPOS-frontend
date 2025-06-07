@@ -3,13 +3,14 @@ function SelectField({
   value,
   onChange,
   options = [],
-  className = "",
-  width = "w-full",
+  className = '',
+  width = 'w-full',
+  showTopLabel = true,
 }) {
   return (
     <div className={`form-control ${width}`}>
-      {label && (
-        <label className="label">
+      {showTopLabel && label && (
+        <label className="mb-1 text-base font-semibold text-gray-700">
           <span className="label-text">{label}</span>
         </label>
       )}
@@ -18,9 +19,12 @@ function SelectField({
         onChange={onChange}
         className={`select select-bordered select-sm ${className}`}
       >
-        <option value="">Seçiniz</option>
+        <option value="">{label || 'Seçiniz'}</option>
         {options.map((opt) => (
-          <option key={opt.id} value={opt.id}>
+          <option
+            key={opt.id}
+            value={opt.id}
+          >
             {opt.label}
           </option>
         ))}

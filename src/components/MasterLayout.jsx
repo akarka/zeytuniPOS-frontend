@@ -1,8 +1,8 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from 'react-router-dom';
 
 function MasterLayout({ aktifKullanici, setAktifKullanici }) {
   const handleLogout = () => {
-    localStorage.removeItem("aktifKullanici");
+    localStorage.removeItem('aktifKullanici');
     setAktifKullanici(null);
   };
 
@@ -22,7 +22,7 @@ function MasterLayout({ aktifKullanici, setAktifKullanici }) {
       </header>
 
       {/* İçerik alanı */}
-      <main className="w-48 flex-1 px-6 py-8">
+      <main className="w-full max-w-screen-xl flex-1 px-6 py-5">
         <Outlet />
       </main>
     </div>

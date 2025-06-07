@@ -1,48 +1,55 @@
-import { useEffect, useState } from "react";
-import api from "../util/api";
-import SelectField from "../components/SelectField";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import api from '../util/api';
+import SelectField from '../components/SelectField';
+import TableMaster from '../components/TableMaster';
+import {
+  EkleButton,
+  SilButton,
+  DuzenleButton,
+  KaydetButton,
+  IptalButton,
+} from '../components/buttons';
 
 function TedarikciAltKategoriAdminPanel() {
   const [veriler, setVeriler] = useState([]);
   const [altKategoriler, setAltKategoriler] = useState([]);
   const [tedarikciler, setTedarikciler] = useState([]);
-  const [yeni, setYeni] = useState({ altKategoriId: "", tedarikciId: "" });
+  const [yeni, setYeni] = useState({ altKategoriId: '', tedarikciId: '' });
   const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {
     fetchData();
     api
-      .get("/api/altkategoriler/dto")
+      .get('/api/altkategoriler/dto')
       .then((res) =>
         setAltKategoriler(
-          res.data.map((a) => ({ id: a.altkId, label: a.altkAdi }))
-        )
+          res.data.map((a) => ({ id: a.altkId, label: a.altkAdi })),
+        ),
       );
     api
-      .get("/api/tedarikciler/dto")
+      .get('/api/tedarikciler/dto')
       .then((res) =>
         setTedarikciler(
-          res.data.map((t) => ({ id: t.tedarikciId, label: t.tedarikciAdi }))
-        )
+          res.data.map((t) => ({ id: t.tedarikciId, label: t.tedarikciAdi })),
+        ),
       );
   }, []);
 
   const fetchData = async () => {
-    const res = await api.get("/api/tedarikcialtkategori/dto");
+    const res = await api.get('/api/tedarikcialtkategori/dto');
     setVeriler(res.data);
   };
 
   const handleEkle = async () => {
-    await api.post("/api/tedarikcialtkategori/dto", yeni);
-    setYeni({ altKategoriId: "", tedarikciId: "" });
+    await api.post('/api/tedarikcialtkategori/dto', yeni);
+    setYeni({ altKategoriId: '', tedarikciId: '' });
     fetchData();
   };
 
   const handleGuncelle = async () => {
     await api.put(
       `/api/tedarikcialtkategori/dto/${duzenlenen.tedarikciAltKategoriId}`,
-      duzenlenen
+      duzenlenen,
     );
     setDuzenlenen(null);
     fetchData();
@@ -56,105 +63,111 @@ function TedarikciAltKategoriAdminPanel() {
   const label = (id, from) => from.find((x) => x.id === id)?.label || id;
 
   return (
-    <div className="flex gap-2 mb-6 items-end">
-      <SelectField
-        label="Tedarikçi - Ürün Tipi İlişkisi Kur"
-        value={yeni.altKategoriId}
-        onChange={(e) => setYeni({ ...yeni, altKategoriId: e.target.value })}
-        options={altKategoriler}
-      />
-      <SelectField
-        value={yeni.tedarikciId}
-        onChange={(e) => setYeni({ ...yeni, tedarikciId: e.target.value })}
-        options={tedarikciler}
-      />
-      <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
-        Ekle
-      </button>
+    <div className="space-y-6">
+      {/* Ekleme alanı */}
+      <div className="flex justify-center py-20">
+        <div className="flex flex-col items-center gap-3">
+          <SelectField
+            label="Alt Kategori Seçiniz"
+            value={yeni.altKategoriId}
+            onChange={(e) =>
+              setYeni({ ...yeni, altKategoriId: e.target.value })
+            }
+            options={altKategoriler}
+            width="w-64"
+            showTopLabel={false}
+          />
+          <SelectField
+            label="Tedarikçi Seçiniz"
+            value={yeni.tedarikciId}
+            onChange={(e) => setYeni({ ...yeni, tedarikciId: e.target.value })}
+            options={tedarikciler}
+            showTopLabel={false}
+          />
 
-      <table className="w-full border text-center">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border">Alt Kategori</th>
-            <th className="p-2 border">Tedarikçi</th>
-            <th className="p-2 border">İşlemler</th>
-          </tr>
-        </thead>
-        <tbody>
-          {veriler.map((v) => (
-            <tr key={v.tedarikciAltKategoriId}>
-              <td className="border p-2">
-                {duzenlenen?.tedarikciAltKategoriId ===
-                v.tedarikciAltKategoriId ? (
-                  <SelectField
-                    value={duzenlenen.altKategoriId}
-                    onChange={(e) =>
-                      setDuzenlenen({
-                        ...duzenlenen,
-                        altKategoriId: parseInt(e.target.value, 10),
-                      })
-                    }
-                    options={altKategoriler}
-                  />
-                ) : (
-                  label(v.altKategoriId, altKategoriler)
-                )}
-              </td>
-              <td className="border p-2">
-                {duzenlenen?.tedarikciAltKategoriId ===
-                v.tedarikciAltKategoriId ? (
-                  <SelectField
-                    value={duzenlenen.tedarikciId}
-                    onChange={(e) =>
-                      setDuzenlenen({
-                        ...duzenlenen,
-                        tedarikciId: parseInt(e.target.value, 10),
-                      })
-                    }
-                    options={tedarikciler}
-                  />
-                ) : (
-                  label(v.tedarikciId, tedarikciler)
-                )}
-              </td>
-              <td className="border p-2 space-x-2">
+          <EkleButton onClick={handleEkle} />
+        </div>
+      </div>
+
+      <TableMaster
+        columns={[
+          { key: 'altKategoriId', label: 'Alt Kategori' },
+          { key: 'tedarikciId', label: 'Tedarikçi' },
+          {
+            key: 'actions',
+            label: 'İşlemler',
+            sortable: false,
+            thClassName: 'p-2 border w-40 sticky right-0 bg-white z-10',
+            tdClassName: 'border p-2 w-40 sticky right-0 bg-white z-0',
+          },
+        ]}
+        data={veriler}
+        keyField="tedarikciAltKategoriId"
+        pagination={true}
+        pageSize={8}
+        sortable={true}
+        renderRow={(v) => (
+          <>
+            <td className="border p-2">
+              {duzenlenen?.tedarikciAltKategoriId ===
+              v.tedarikciAltKategoriId ? (
+                <SelectField
+                  label=""
+                  value={duzenlenen.altKategoriId}
+                  onChange={(e) =>
+                    setDuzenlenen({
+                      ...duzenlenen,
+                      altKategoriId: parseInt(e.target.value, 10),
+                    })
+                  }
+                  options={altKategoriler}
+                />
+              ) : (
+                label(v.altKategoriId, altKategoriler)
+              )}
+            </td>
+
+            <td className="border p-2">
+              {duzenlenen?.tedarikciAltKategoriId ===
+              v.tedarikciAltKategoriId ? (
+                <SelectField
+                  label=""
+                  value={duzenlenen.tedarikciId}
+                  onChange={(e) =>
+                    setDuzenlenen({
+                      ...duzenlenen,
+                      tedarikciId: parseInt(e.target.value, 10),
+                    })
+                  }
+                  options={tedarikciler}
+                />
+              ) : (
+                label(v.tedarikciId, tedarikciler)
+              )}
+            </td>
+
+            {/* İŞLEMLER */}
+            <td className="border sticky right-0 bg-white w-40">
+              <div className="grid grid-cols-2">
                 {duzenlenen?.tedarikciAltKategoriId ===
                 v.tedarikciAltKategoriId ? (
                   <>
-                    <button
-                      className="bg-blue-500 text-white px-2"
-                      onClick={handleGuncelle}
-                    >
-                      Kaydet
-                    </button>
-                    <button
-                      className="bg-gray-300 px-2"
-                      onClick={() => setDuzenlenen(null)}
-                    >
-                      İptal
-                    </button>
+                    <KaydetButton onClick={handleGuncelle} />
+                    <IptalButton onClick={() => setDuzenlenen(null)} />
                   </>
                 ) : (
                   <>
-                    <button
-                      className="bg-yellow-500 text-white px-2"
-                      onClick={() => setDuzenlenen(v)}
-                    >
-                      Düzenle
-                    </button>
-                    <button
-                      className="bg-red-500 text-white px-2"
+                    <DuzenleButton onClick={() => setDuzenlenen(v)} />
+                    <SilButton
                       onClick={() => handleSil(v.tedarikciAltKategoriId)}
-                    >
-                      Sil
-                    </button>
+                    />
                   </>
                 )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </td>
+          </>
+        )}
+      />
     </div>
   );
 }

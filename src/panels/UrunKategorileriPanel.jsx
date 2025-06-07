@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
-import api from "../util/api";
-import InputField from "../components/InputField";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import api from '../util/api';
+import InputField from '../components/InputField';
+import TableMaster from '../components/TableMaster';
+import {
+  EkleButton,
+  SilButton,
+  DuzenleButton,
+  KaydetButton,
+  IptalButton,
+} from '../components/buttons';
 
 function UrunKategorileriAdminPanel() {
   const [kategoriler, setKategoriler] = useState([]);
-  const [yeniKategori, setYeniKategori] = useState("");
+  const [yeniKategori, setYeniKategori] = useState('');
   const [duzenlenen, setDuzenlenen] = useState(null);
 
   useEffect(() => {
@@ -13,30 +20,30 @@ function UrunKategorileriAdminPanel() {
   }, []);
 
   const fetchKategoriler = async () => {
-    const res = await api.get("/api/urunkategorileri/dto");
+    const res = await api.get('/api/urunkategorileri/dto');
     setKategoriler(res.data);
   };
 
   const handleEkle = async () => {
     if (!yeniKategori.trim()) return;
 
-    await api.post("/api/urunkategorileri/dto", {
+    await api.post('/api/urunkategorileri/dto', {
       urunKategoriAdi: yeniKategori,
     });
 
-    setYeniKategori("");
+    setYeniKategori('');
     fetchKategoriler();
   };
 
   const handleGuncelle = async () => {
     try {
-      await api.put("/api/urunkategorileri/dto", duzenlenen);
+      await api.put('/api/urunkategorileri/dto', duzenlenen);
       setDuzenlenen(null);
       fetchKategoriler();
     } catch (error) {
       console.error(
-        "Güncelleme hatası:",
-        error.response?.data || error.message
+        'Güncelleme hatası:',
+        error.response?.data || error.message,
       );
     }
   };
@@ -46,87 +53,82 @@ function UrunKategorileriAdminPanel() {
       await api.delete(`/api/urunkategorileri/${id}`);
       fetchKategoriler();
     } catch (error) {
-      console.error("Silme hatası:", error.response?.data || error.message);
+      console.error('Silme hatası:', error.response?.data || error.message);
     }
   };
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <div className="flex gap-2 mb-6">
-        <InputField
-          label="Yeni Kategori Ekle"
-          value={yeniKategori}
-          onChange={(e) => setYeniKategori(e.target.value)}
-          placeholder="Kategori adı"
-        />
-        <button className="bg-green-500 text-white px-4" onClick={handleEkle}>
-          Ekle
-        </button>
+    <div className="space-y-6">
+      {/* Ekleme alanı */}
+      <div className="flex justify-center mt-12 mb-10">
+        <div className="flex flex-col items-center gap-2">
+          <InputField
+            label="Yeni Kategori Adı"
+            value={yeniKategori}
+            onChange={(e) => setYeniKategori(e.target.value)}
+            showTopLabel={false}
+          />
+          <EkleButton onClick={handleEkle} />
+        </div>
       </div>
 
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100 text-center">
-            <th className="p-2 border">Kategori Adı</th>
-            <th className="p-2 border">İşlemler</th>
-          </tr>
-        </thead>
-        <tbody>
-          {kategoriler.map((kat) => (
-            <tr key={kat.urunKategoriId} className="text-center">
-              <td className="border p-2">
-                {duzenlenen?.urunKategoriId === kat.urunKategoriId ? (
-                  <input
-                    value={duzenlenen.urunKategoriAdi}
-                    onChange={(e) =>
-                      setDuzenlenen({
-                        ...duzenlenen,
-                        urunKategoriAdi: e.target.value,
-                      })
-                    }
-                    className="border p-1 w-full"
-                  />
-                ) : (
-                  kat.urunKategoriAdi
-                )}
-              </td>
-              <td className="border p-2 space-x-2">
+      <TableMaster
+        columns={[
+          { key: 'urunKategoriAdi', label: 'Kategori Adı' },
+          {
+            key: 'actions',
+            label: 'İşlemler',
+            sortable: false,
+            thClassName: 'p-2 border w-40 sticky right-0 bg-white z-10',
+            tdClassName: 'border p-2 w-40 sticky right-0 bg-white z-0',
+          },
+        ]}
+        data={kategoriler}
+        keyField="urunKategoriId"
+        pagination={true}
+        pageSize={8}
+        sortable={true}
+        defaultSortKey="urunKategoriAdi"
+        renderRow={(kat) => (
+          <>
+            <td className="border p-2">
+              {duzenlenen?.urunKategoriId === kat.urunKategoriId ? (
+                <InputField
+                  label=""
+                  value={duzenlenen.urunKategoriAdi}
+                  onChange={(e) =>
+                    setDuzenlenen({
+                      ...duzenlenen,
+                      urunKategoriAdi: e.target.value,
+                    })
+                  }
+                  placeholder="Kategori adı"
+                  width="w-full"
+                />
+              ) : (
+                kat.urunKategoriAdi
+              )}
+            </td>
+
+            {/* İŞLEMLER */}
+            <td className="border sticky right-0 bg-white w-40">
+              <div className="grid grid-cols-2">
                 {duzenlenen?.urunKategoriId === kat.urunKategoriId ? (
                   <>
-                    <button
-                      className="bg-blue-500 text-white px-2"
-                      onClick={handleGuncelle}
-                    >
-                      Kaydet
-                    </button>
-                    <button
-                      className="bg-gray-300 px-2"
-                      onClick={() => setDuzenlenen(null)}
-                    >
-                      İptal
-                    </button>
+                    <KaydetButton onClick={handleGuncelle} />
+                    <IptalButton onClick={() => setDuzenlenen(null)} />
                   </>
                 ) : (
                   <>
-                    <button
-                      className="bg-yellow-500 text-white px-2"
-                      onClick={() => setDuzenlenen(kat)}
-                    >
-                      Düzenle
-                    </button>
-                    <button
-                      className="bg-red-500 text-white px-2"
-                      onClick={() => handleSil(kat.urunKategoriId)}
-                    >
-                      Sil
-                    </button>
+                    <DuzenleButton onClick={() => setDuzenlenen(kat)} />
+                    <SilButton onClick={() => handleSil(kat.urunKategoriId)} />
                   </>
                 )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </td>
+          </>
+        )}
+      />
     </div>
   );
 }

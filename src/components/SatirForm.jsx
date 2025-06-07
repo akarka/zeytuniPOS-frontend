@@ -4,7 +4,7 @@ function SatirForm({ initialData, fields, onCancel, onSubmit }) {
   const [form, setForm] = useState(initialData);
 
   const handleChange = (field, value) => {
-    setForm(prev => ({ ...prev, [field]: value }));
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -15,8 +15,11 @@ function SatirForm({ initialData, fields, onCancel, onSubmit }) {
   return (
     <tr>
       <td colSpan={fields.length + 1}>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '10px' }}>
-          {fields.map(field => {
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: 'flex', gap: '10px' }}
+        >
+          {fields.map((field) => {
             if (field.type === 'select') {
               return (
                 <select
@@ -25,8 +28,13 @@ function SatirForm({ initialData, fields, onCancel, onSubmit }) {
                   onChange={(e) => handleChange(field.name, e.target.value)}
                 >
                   <option value="">{field.placeholder}</option>
-                  {field.options.map(opt => (
-                    <option key={opt.id} value={opt.id}>{opt.label}</option>
+                  {field.options.map((opt) => (
+                    <option
+                      key={opt.id}
+                      value={opt.id}
+                    >
+                      {opt.label}
+                    </option>
                   ))}
                 </select>
               );
@@ -43,7 +51,12 @@ function SatirForm({ initialData, fields, onCancel, onSubmit }) {
             }
           })}
           <button type="submit">Kaydet</button>
-          <button type="button" onClick={onCancel}>İptal</button>
+          <button
+            type="button"
+            onClick={onCancel}
+          >
+            İptal
+          </button>
         </form>
       </td>
     </tr>
