@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import LogoutButton from './buttons/LogoutButton';
 
 function MasterLayout({ aktifKullanici, setAktifKullanici }) {
   const handleLogout = () => {
@@ -13,12 +14,7 @@ function MasterLayout({ aktifKullanici, setAktifKullanici }) {
         <span className="text-sm">
           Hoş geldin, <strong>{aktifKullanici?.kullaniciAdi}</strong>
         </span>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
-        >
-          Çıkış Yap
-        </button>
+        <LogoutButton onClick={handleLogout} />
       </header>
 
       {/* İçerik alanı */}

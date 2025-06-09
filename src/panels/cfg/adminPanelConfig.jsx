@@ -3,8 +3,7 @@ import AltKategoriPanel from '../AltKategoriPanel';
 import UrunKategorileriPanel from '../UrunKategorileriPanel';
 import TedarikciAltKategoriPanel from '../TedarikciAltKategoriPanel';
 import UrunTedarikciPanel from '../UrunTedarikciPanel';
-import KullaniciPage from '../KullaniciPanel';
-import SifreGuncellePanel from '../SifreGuncellePanel';
+import KullaniciPanel from '../KullaniciPanel';
 import GecmisFiyatPage from '../GecmisFiyatPanel';
 import IslemLogPanel from '../IslemLogPanel';
 
@@ -37,12 +36,7 @@ const adminPanelConfig = [
   {
     key: 'kullanici',
     title: 'Kullanıcı Yönetimi',
-    component: <KullaniciPage />,
-  },
-  {
-    key: 'sifre',
-    title: 'Şifre Güncelleme',
-    component: <SifreGuncellePanel />,
+    component: <KullaniciPanel />,
   },
   {
     key: 'gecmisFiyat',

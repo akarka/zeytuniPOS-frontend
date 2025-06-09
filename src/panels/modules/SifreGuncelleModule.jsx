@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import api from '../util/api';
-import SelectField from '../components/SelectField';
-import InputField from '../components/InputField';
-import { KaydetButton } from '../components/buttons';
+import api from '../../util/api';
+import SelectField from '../../components/SelectField';
+import InputField from '../../components/InputField';
+import { KaydetButton } from '../../components/buttons';
 
-function SifreGuncellePanel() {
+function SifreGuncelleModule() {
   const [kullanicilar, setKullanicilar] = useState([]);
   const [secilenId, setSecilenId] = useState('');
   const [yeniSifre, setYeniSifre] = useState('');
@@ -42,9 +42,6 @@ function SifreGuncellePanel() {
       setMesaj('Şifre güncellenemedi.');
     }
   };
-  {
-    /* burayı kullanıcı sol paneline alacağız */
-  }
   return (
     <div className="space-y-6">
       <div className="flex justify-center mt-12 mb-10">
@@ -72,4 +69,4 @@ function SifreGuncellePanel() {
   );
 }
 
-export default SifreGuncellePanel;
+export default SifreGuncelleModule;

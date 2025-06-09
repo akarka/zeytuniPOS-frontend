@@ -22,6 +22,7 @@ function MasterButton({
       sm: 'px-3 py-1 text-sm',
       base: 'px-4 py-2 text-base',
       lg: 'px-5 py-3 text-lg',
+      xl: 'h-24 text-xl px-6',
     }[size] || '';
 
   return (

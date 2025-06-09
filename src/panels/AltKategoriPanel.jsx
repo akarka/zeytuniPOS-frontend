@@ -1,17 +1,9 @@
 import { useEffect, useState } from 'react';
+import AltKategoriEkleModule from './modules/AltKategoriEkleModule';
+import AltKategoriListeModule from './modules/AltKategoriListeModule';
 import api from '../util/api';
-import SelectField from '../components/SelectField';
-import InputField from '../components/InputField';
-import TableMaster from '../components/TableMaster';
-import {
-  EkleButton,
-  SilButton,
-  DuzenleButton,
-  KaydetButton,
-  IptalButton,
-} from '../components/buttons';
 
-function AltKategoriAdminPanel() {
+export default function AltKategoriPanel() {
   const [altKategoriler, setAltKategoriler] = useState([]);
   const [kategoriSecenekleri, setKategoriSecenekleri] = useState([]);
   const [yeniAltKategori, setYeniAltKategori] = useState('');
@@ -20,14 +12,7 @@ function AltKategoriAdminPanel() {
 
   useEffect(() => {
     fetchAltKategoriler();
-
-    api.get('/api/urunkategorileri/dto').then((res) => {
-      const dropdownOptions = res.data.map((k) => ({
-        id: k.urunKategoriId,
-        label: k.urunKategoriAdi,
-      }));
-      setKategoriSecenekleri(dropdownOptions);
-    });
+    fetchKategoriSecenekleri();
   }, []);
 
   const fetchAltKategoriler = async () => {
@@ -35,9 +20,13 @@ function AltKategoriAdminPanel() {
     setAltKategoriler(res.data);
   };
 
-  const getKategoriAdi = (id) => {
-    const kategori = kategoriSecenekleri.find((k) => k.id === id);
-    return kategori ? kategori.label : id;
+  const fetchKategoriSecenekleri = async () => {
+    const res = await api.get('/api/urunkategorileri/dto');
+    const dropdownOptions = res.data.map((k) => ({
+      id: k.urunKategoriId,
+      label: k.urunKategoriAdi,
+    }));
+    setKategoriSecenekleri(dropdownOptions);
   };
 
   const handleEkle = async () => {
@@ -52,122 +41,38 @@ function AltKategoriAdminPanel() {
   };
 
   const handleSil = async (id) => {
-    try {
-      await api.delete(`/api/altkategoriler/${id}`);
-      fetchAltKategoriler();
-    } catch (error) {
-      console.error('Silme hatası:', error.response?.data || error.message);
-    }
+    await api.delete(`/api/altkategoriler/${id}`);
+    fetchAltKategoriler();
   };
 
   const handleGuncelle = async () => {
-    try {
-      await api.put('/api/altkategoriler/dto', duzenlenen);
-      setDuzenlenen(null);
-      fetchAltKategoriler();
-    } catch (error) {
-      console.error(
-        'Güncelleme hatası:',
-        error.response?.data || error.message,
-      );
-    }
+    await api.put('/api/altkategoriler/dto', duzenlenen);
+    setDuzenlenen(null);
+    fetchAltKategoriler();
   };
 
   return (
-    <div className="space-y-6">
-      {/* Ekleme alanı */}
-      <div className="flex justify-center mt-12 mb-10">
-        <div className="flex flex-col items-center gap-2">
-          <InputField
-            label="Yeni Alt Kategori Adı"
-            value={yeniAltKategori}
-            onChange={(e) => setYeniAltKategori(e.target.value)}
-            width="w-64"
-            showTopLabel={false}
-          />
-          <SelectField
-            label="Kahvaltı / İmalat / Perakende"
-            value={kategoriId}
-            onChange={(e) => setKategoriId(e.target.value)}
-            options={kategoriSecenekleri}
-            showTopLabel={false}
-          />
-          <EkleButton onClick={handleEkle} />
-        </div>
+    <div className="flex gap-6">
+      <div className="basis-1/4 border-r pr-4">
+        <AltKategoriEkleModule
+          yeniAltKategori={yeniAltKategori}
+          setYeniAltKategori={setYeniAltKategori}
+          kategoriId={kategoriId}
+          setKategoriId={setKategoriId}
+          kategoriSecenekleri={kategoriSecenekleri}
+          handleEkle={handleEkle}
+        />
       </div>
-
-      <TableMaster
-        columns={[
-          { key: 'altkAdi', label: 'Adı' },
-          { key: 'urunKategoriId', label: 'Ürün Kategori' },
-          {
-            key: 'actions',
-            label: 'İşlemler',
-            sortable: false,
-            thClassName: 'p-2 border w-40 sticky right-0 bg-white z-10',
-            tdClassName: 'border p-2 w-40 sticky right-0 bg-white z-0',
-          },
-        ]}
-        data={altKategoriler}
-        keyField="altkId"
-        pagination={true}
-        pageSize={8}
-        sortable={true}
-        defaultSortKey="altkAdi"
-        renderRow={(ak) => (
-          <>
-            <td className="border p-2">
-              {duzenlenen?.altkId === ak.altkId ? (
-                <input
-                  value={duzenlenen.altkAdi}
-                  onChange={(e) =>
-                    setDuzenlenen({ ...duzenlenen, altkAdi: e.target.value })
-                  }
-                  className="border p-1 w-full"
-                />
-              ) : (
-                ak.altkAdi
-              )}
-            </td>
-
-            <td className="border p-2">
-              {duzenlenen?.altkId === ak.altkId ? (
-                <SelectField
-                  label=""
-                  value={duzenlenen.urunKategoriId}
-                  onChange={(e) =>
-                    setDuzenlenen({
-                      ...duzenlenen,
-                      urunKategoriId: parseInt(e.target.value, 10),
-                    })
-                  }
-                  options={kategoriSecenekleri}
-                />
-              ) : (
-                getKategoriAdi(ak.urunKategoriId)
-              )}
-            </td>
-
-            <td className="border sticky right-0 bg-white w-40">
-              <div className="grid grid-cols-2">
-                {duzenlenen?.altkId === ak.altkId ? (
-                  <>
-                    <KaydetButton onClick={handleGuncelle} />
-                    <IptalButton onClick={() => setDuzenlenen(null)} />
-                  </>
-                ) : (
-                  <>
-                    <DuzenleButton onClick={() => setDuzenlenen(ak)} />
-                    <SilButton onClick={() => handleSil(ak.altkId)} />
-                  </>
-                )}
-              </div>
-            </td>
-          </>
-        )}
-      />
+      <div className="basis-3/4 pl-4">
+        <AltKategoriListeModule
+          altKategoriler={altKategoriler}
+          duzenlenen={duzenlenen}
+          setDuzenlenen={setDuzenlenen}
+          kategoriSecenekleri={kategoriSecenekleri}
+          handleGuncelle={handleGuncelle}
+          handleSil={handleSil}
+        />
+      </div>
     </div>
   );
 }
-
-export default AltKategoriAdminPanel;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import React from 'react';
 import api from '../util/api';
+import GecmisDetayModule from './modules/GecmisDetayModule';
 import { DetayButton } from '../components/buttons';
 
 function GecmisFiyatPage() {
@@ -16,7 +16,6 @@ function GecmisFiyatPage() {
     try {
       const res = await api.get('/api/gecmisfiyat/dto');
 
-      // urunId'ye göre en yeni kaydı almak için bir Map
       const latestByUrun = new Map();
       res.data.forEach((item) => {
         const current = latestByUrun.get(item.urunId);
@@ -54,61 +53,60 @@ function GecmisFiyatPage() {
   };
 
   return (
-    <div className="p-4 max-w-5xl mx-auto">
-      <table className="w-full border text-center">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border">Ürün Adı</th>
-            <th className="p-2 border">Son Fiyat</th>
-            <th className="p-2 border">Son Tarih</th>
-            <th className="p-2 border">Detay</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from(new Map(kayitlar.map((k) => [k.urunId, k])).values()).map(
-            (k) => (
-              <React.Fragment key={k.urunId}>
-                <tr>
-                  <td className="border p-2">{k.urunAdi || '?'}</td>
-                  <td className="border p-2">{k.satisFiyati} ₺</td>
-                  <td className="border p-2">{k.tarih}</td>
-                  <td className="border p-0">
-                    <DetayButton
-                      expanded={expanded === k.urunId}
-                      onClick={() => toggleDetayGoster(k.urunId)}
-                      className="w-full h-full rounded-none"
-                    />
-                  </td>
-                </tr>
-                {/* burayı sol panele alacağız */}
-                {expanded === k.urunId && detaylar[k.urunId] && (
-                  <tr className="bg-gray-50">
-                    <td
-                      colSpan={4}
-                      className="border p-2"
-                    >
-                      <div className="grid grid-cols-4">
-                        <div className="col-span-3">
-                          <ul className="list-disc pl-6 text-left">
-                            {detaylar[k.urunId].map((d) => (
-                              <li key={d.gecmisFiyatId}>
-                                {d.tarih} – {d.satisFiyati} ₺
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="text-center text-sm text-gray-500 italic flex items-center justify-center">
-                          Detaylı Liste
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ),
-          )}
-        </tbody>
-      </table>
+    <div className="flex gap-6">
+      {/* SOL PANEL – Detaylar */}
+      <div className="basis-1/4 border-r pr-4">
+        {expanded && detaylar[expanded] ? (
+          <div className="basis-1/3 border-r pr-4">
+            {expanded && detaylar[expanded] ? (
+              <div>
+                <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                  Ürün Geçmişi
+                </h2>
+                <GecmisDetayModule detayVerisi={detaylar[expanded]} />
+              </div>
+            ) : (
+              <p className="text-gray-500 italic text-sm">
+                Detay görmek için sağdan ürün seçin.
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="text-gray-500 italic text-sm">
+            Detay görmek için sağdan ürün seçin.
+          </p>
+        )}
+      </div>
+
+      {/* SAĞ PANEL – Son Fiyatlar */}
+      <div className="basis-3/4">
+        <table className="w-full border text-center">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="p-2 border">Ürün Adı</th>
+              <th className="p-2 border">Son Fiyat</th>
+              <th className="p-2 border">Son Tarih</th>
+              <th className="p-2 border">İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            {kayitlar.map((k) => (
+              <tr key={k.urunId}>
+                <td className="border p-2">{k.urunAdi || '?'}</td>
+                <td className="border p-2">{k.satisFiyati} ₺</td>
+                <td className="border p-2">{k.tarih}</td>
+                <td className="border p-0">
+                  <DetayButton
+                    expanded={expanded === k.urunId}
+                    onClick={() => toggleDetayGoster(k.urunId)}
+                    className="w-full h-full rounded-none"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
