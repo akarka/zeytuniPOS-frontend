@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import api from '../util/api';
+import ContentContainer from '../components/ContentContainer';
 import GecmisDetayModule from './modules/GecmisDetayModule';
-import { DetayButton } from '../components/buttons';
+import GecmisListeModule from './modules/GecmisListeModule';
 
 function GecmisFiyatPage() {
   const [kayitlar, setKayitlar] = useState([]);
@@ -53,61 +54,34 @@ function GecmisFiyatPage() {
   };
 
   return (
-    <div className="flex gap-6">
-      {/* SOL PANEL – Detaylar */}
-      <div className="basis-1/4 border-r pr-4">
-        {expanded && detaylar[expanded] ? (
-          <div className="basis-1/3 border-r pr-4">
-            {expanded && detaylar[expanded] ? (
-              <div>
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">
-                  Ürün Geçmişi
-                </h2>
-                <GecmisDetayModule detayVerisi={detaylar[expanded]} />
-              </div>
-            ) : (
-              <p className="text-gray-500 italic text-sm">
-                Detay görmek için sağdan ürün seçin.
-              </p>
-            )}
-          </div>
-        ) : (
-          <p className="text-gray-500 italic text-sm">
-            Detay görmek için sağdan ürün seçin.
-          </p>
-        )}
-      </div>
+    <ContentContainer>
+      <div className="flex gap-6 h-[350px]">
+        {/* SOL PANEL – Detaylar */}
+        <div className="basis-1/4 border-r pr-4">
+          {expanded && detaylar[expanded] ? (
+            <>
+              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                Ürün Geçmişi
+              </h2>
+              <GecmisDetayModule detayVerisi={detaylar[expanded]} />
+            </>
+          ) : (
+            <p className="text-gray-500 italic text-sm">
+              Ürün geçmiş detayı görmek için sağdan detay'a basın.
+            </p>
+          )}
+        </div>
 
-      {/* SAĞ PANEL – Son Fiyatlar */}
-      <div className="basis-3/4">
-        <table className="w-full border text-center">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Ürün Adı</th>
-              <th className="p-2 border">Son Fiyat</th>
-              <th className="p-2 border">Son Tarih</th>
-              <th className="p-2 border">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody>
-            {kayitlar.map((k) => (
-              <tr key={k.urunId}>
-                <td className="border p-2">{k.urunAdi || '?'}</td>
-                <td className="border p-2">{k.satisFiyati} ₺</td>
-                <td className="border p-2">{k.tarih}</td>
-                <td className="border p-0">
-                  <DetayButton
-                    expanded={expanded === k.urunId}
-                    onClick={() => toggleDetayGoster(k.urunId)}
-                    className="w-full h-full rounded-none"
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* SAĞ PANEL – Liste */}
+        <div className="basis-3/4 pl-4">
+          <GecmisListeModule
+            kayitlar={kayitlar}
+            expanded={expanded}
+            toggleDetayGoster={toggleDetayGoster}
+          />
+        </div>
       </div>
-    </div>
+    </ContentContainer>
   );
 }
 

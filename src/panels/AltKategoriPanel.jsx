@@ -54,6 +54,7 @@ export default function AltKategoriPanel() {
   return (
     <div className="flex gap-6">
       <div className="basis-1/4 border-r pr-4">
+          <h3 className="text-lg font-bold mb-6 text-center">Yeni Alt Kategori</h3>
         <AltKategoriEkleModule
           yeniAltKategori={yeniAltKategori}
           setYeniAltKategori={setYeniAltKategori}

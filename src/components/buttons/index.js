@@ -4,3 +4,6 @@ export { default as DuzenleButton } from './DuzenleButton.jsx';
 export { default as IptalButton } from './IptalButton';
 export { default as KaydetButton } from './KaydetButton';
 export { default as DetayButton } from './DetayButton';
+export { default as AnaSayfaButton } from './AnaSayfaButton';
+export { default as LogoutButton } from './LogoutButton';
+export { default as GirisButton } from './GirisButton';

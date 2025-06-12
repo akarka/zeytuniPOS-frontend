@@ -69,6 +69,7 @@ function KullaniciPanel() {
   return (
     <div className="flex gap-6">
       <div className="basis-1/4 border-r pr-4">
+          <h3 className="text-lg font-bold mb-6 text-center">Yeni Kullanıcı</h3>
         <KullaniciEkleModule
           yeniKullaniciAdi={yeniKullaniciAdi}
           setYeniKullaniciAdi={setYeniKullaniciAdi}
@@ -82,6 +83,7 @@ function KullaniciPanel() {
           aktiflikSecenekleri={aktiflikSecenekleri}
           handleEkle={handleEkle}
         />
+          <h3 className="text-lg font-bold mb-6 text-center">Şifre Değiştir</h3>
         <SifreGuncelleModule />
       </div>
       <div className="basis-3/4 pl-4">

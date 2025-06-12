@@ -23,6 +23,8 @@ function MasterButton({
       base: 'px-4 py-2 text-base',
       lg: 'px-5 py-3 text-lg',
       xl: 'h-24 text-xl px-6',
+      sq: 'w-10 h-10 text-base',
+      ci: 'w-10 h-10 rounded-full text-xl',
     }[size] || '';
 
   return (

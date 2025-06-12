@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../util/api';
 import SatisEkleModule from '../panels/modules/SatisEkleModule';
 import SatisListeModule from '../panels/modules/SatisListeModule';
+import ContentContainer from '../components/ContentContainer';
 
 function SatisPage() {
   const [satislar, setSatislar] = useState([]);
@@ -41,24 +42,28 @@ function SatisPage() {
   };
 
   return (
-    <div className="flex gap-6">
-      <div className="basis-1/4 border-r pr-4">
-        <SatisEkleModule
-          urunSecenekleri={urunSecenekleri}
-          onEkle={handleEkle}
-        />
+    <ContentContainer>
+      <h2 className="text-xl font-bold mb-6 text-center">Satış Yönetimi</h2>
+      <div className="flex gap-6">
+        <div className="basis-1/4 border-r pr-4">
+          <h3 className="text-lg font-bold mb-6 text-center">Yeni Satış</h3>
+          <SatisEkleModule
+            urunSecenekleri={urunSecenekleri}
+            onEkle={handleEkle}
+          />
+        </div>
+        <div className="basis-3/4 pl-4">
+          <SatisListeModule
+            satislar={satislar}
+            urunSecenekleri={urunSecenekleri}
+            duzenlenen={duzenlenen}
+            setDuzenlenen={setDuzenlenen}
+            handleGuncelle={handleGuncelle}
+            handleSil={handleSil}
+          />
+        </div>
       </div>
-      <div className="basis-3/4 pl-4">
-        <SatisListeModule
-          satislar={satislar}
-          urunSecenekleri={urunSecenekleri}
-          duzenlenen={duzenlenen}
-          setDuzenlenen={setDuzenlenen}
-          handleGuncelle={handleGuncelle}
-          handleSil={handleSil}
-        />
-      </div>
-    </div>
+    </ContentContainer>
   );
 }
 

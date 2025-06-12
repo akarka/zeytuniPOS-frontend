@@ -64,6 +64,7 @@ export default function UrunTedarikciPanel() {
   return (
     <div className="flex gap-6">
       <div className="basis-1/4 border-r pr-4">
+          <h3 className="text-lg font-bold mb-6 text-center">Ürünü Tedarikçiye Bağla</h3>
         <UrunTedarikciEkleModule
           urunler={urunler}
           tedarikciler={tedarikciler}

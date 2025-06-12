@@ -36,8 +36,9 @@ export default function BirimPanel() {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-6 h-[350px]">
       <div className="basis-1/4 border-r pr-4">
+          <h3 className="text-lg font-bold mb-6 text-center">Yeni Birim</h3>
         <BirimEkleModule
           yeniBirim={yeniBirim}
           setYeniBirim={setYeniBirim}

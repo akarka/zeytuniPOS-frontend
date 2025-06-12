@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../util/api";
+import ContentContainer from "../components/ContentContainer";
+import InputField from '../components/InputField';
+import { GirisButton } from '../components/buttons';
 
 function LoginPage({ setAktifKullanici }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
- 
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -41,24 +44,32 @@ function LoginPage({ setAktifKullanici }) {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Giriş Yap</h2>
-      <input
-        type="text"
-        placeholder="Kullanıcı Adı"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <br />
-      <input
-        type="password"
-        placeholder="Şifre"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-      <button type="submit">Giriş</button>
-    </form>
+    <ContentContainer>
+      <form
+        onSubmit={handleLogin}
+        className="max-w-md mx-auto mt-16 p-6 border rounded bg-gray-50 shadow"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center">Giriş Yap</h2>
+
+        <InputField
+          placeholder="Kullanıcı adı"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <InputField
+          placeholder="Şifre"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <div className="mt-6 text-center">
+          <GirisButton type="submit" />
+        </div>
+      </form>
+    </ContentContainer>
   );
 }
 

@@ -41,6 +41,9 @@ export default function UrunKategoriPanel() {
   return (
     <div className="flex gap-6">
       <div className="basis-1/4 border-r pr-4">
+        <h3 className="text-lg font-bold mb-6 text-center">
+          Yeni Ürün Kategorisi
+        </h3>
         <UrunKategoriEkleModule
           yeniKategori={yeniKategori}
           setYeniKategori={setYeniKategori}

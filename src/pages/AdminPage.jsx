@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 function AdminPage() {
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Dükkan Yönetim Paneli</h1>
-
       <div style={{ marginTop: '30px' }}>
         {/* Satır 1: Herkes */}
         <div style={{ marginBottom: '20px' }}>
@@ -45,12 +43,6 @@ function AdminPage() {
             style={{ marginRight: '20px', fontSize: '18px' }}
           >
             Yönetimsel Araçlar
-          </Link>
-          <Link
-            to="/admin/test"
-            style={{ fontSize: '18px' }}
-          >
-            testui
           </Link>
         </div>
       </div>

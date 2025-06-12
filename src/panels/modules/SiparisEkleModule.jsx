@@ -1,4 +1,8 @@
-import { SilButton, DuzenleButton } from '../../components/buttons';
+import {
+  SilButton,
+  DuzenleButton,
+  KaydetButton,
+} from '../../components/buttons';
 import { useState } from 'react';
 
 function SiparisEkleModule({
@@ -9,6 +13,7 @@ function SiparisEkleModule({
 }) {
   const [duzenlenenUrunId, setDuzenlenenUrunId] = useState(null);
   const [geciciMiktar, setGeciciMiktar] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const toplamTutar = sepet.reduce(
     (sum, item) => sum + (item.satisFiyati || 0) * item.miktar,
@@ -28,6 +33,18 @@ function SiparisEkleModule({
     }
     setDuzenlenenUrunId(null);
     setGeciciMiktar(null);
+  };
+
+  const handleSiparisiOnayla = async () => {
+    if (sepet.length === 0 || loading) return;
+    setLoading(true);
+    try {
+      await onSiparisOnayla(); // dışarıdan gelen prop fonksiyon
+    } catch (err) {
+      console.error('Sipariş onaylanamadı:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,12 +68,7 @@ function SiparisEkleModule({
                   />
                   <span className="text-gray-700">{item.birimAdi}</span>
                   <div className="ml-auto flex gap-2">
-                    <button
-                      className="px-3 py-1 rounded bg-green-600 text-white text-sm"
-                      onClick={() => handleKaydet(item.urunId)}
-                    >
-                      Kaydet
-                    </button>
+                    <KaydetButton onClick={() => handleKaydet(item.urunId)} />
                     <SilButton onClick={() => onSil(item.urunId)} />
                   </div>
                 </div>
@@ -85,10 +97,15 @@ function SiparisEkleModule({
         Toplam: {toplamTutar.toFixed(2)} ₺
       </div>
       <button
-        onClick={onSiparisOnayla}
-        className="mt-4 w-full py-2 rounded bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition"
+        onClick={handleSiparisiOnayla}
+        disabled={loading}
+        className={`mt-4 w-full py-2 rounded text-white font-semibold transition ${
+          loading
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-emerald-600 hover:bg-emerald-700'
+        }`}
       >
-        Siparişi Onayla
+        {loading ? 'Onaylanıyor...' : 'Siparişi Onayla'}
       </button>
     </div>
   );

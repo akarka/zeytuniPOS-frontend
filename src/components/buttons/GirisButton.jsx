@@ -1,14 +1,14 @@
 import MasterButton from './MasterButton';
 
-export default function LogoutButton({
+export default function GirisButton({
   onClick,
-  children = 'Çıkış Yap',
+  children = 'Giriş Yap',
   ...rest
 }) {
   return (
     <MasterButton
       onClick={onClick}
-      color="outline"
+      color="success"
       {...rest}
     >
       {children}
