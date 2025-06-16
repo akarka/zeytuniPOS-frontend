@@ -98,11 +98,10 @@ function SiparisPage() {
 
   return (
     <ContentContainer>
-      <h2 className="text-xl font-bold mb-6 text-center">Sipariş Al</h2>
       {panelConfig.length > 0 ? (
         <PanelComponent
           panelConfig={panelConfig}
-          baslik=" "
+          baslik="Sipariş Al"
         />
       ) : (
         <p className="text-sm text-gray-500 italic">Yükleniyor...</p>

@@ -37,7 +37,7 @@ function TedarikciPage() {
   return (
     <ContentContainer>
       <h2 className="text-xl font-bold mb-6 text-center">Tedarikçi Yönetimi</h2>
-      <div className="flex gap-6">
+      <div className="flex gap-6 h-[560px] overflow-y-auto border rounded shadow-sm p-4 bg-white">
         <div className="basis-1/4 border-r pr-4">
           <h3 className="text-lg font-bold mb-6 text-center">Yeni Tedarikçi</h3>
           <TedarikciEkleModule onEkle={handleEkle} />

@@ -1,45 +1,44 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../util/api";
-import ContentContainer from "../components/ContentContainer";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../util/api';
+import ContentContainer from '../components/ContentContainer';
 import InputField from '../components/InputField';
 import { GirisButton } from '../components/buttons';
 
 function LoginPage({ setAktifKullanici }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
       const params = new URLSearchParams();
-      params.append("username", username);
-      params.append("password", password);
+      params.append('username', username);
+      params.append('password', password);
 
-      await api.post("/api/auth/login", params, {
+      await api.post('/api/auth/login', params, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
         withCredentials: true,
       });
 
       // Başarılı giriş sonrası kullanıcı bilgisini çekelim
-      const res = await api.get("http://localhost:8080/api/kullanicilar/dto", {
+      const res = await api.get('http://localhost:8080/api/kullanicilar/dto', {
         withCredentials: true,
       });
 
       const bulunan = res.data.find((k) => k.kullaniciAdi === username);
-      if (!bulunan) throw new Error("Kullanıcı verisi çekilemedi");
+      if (!bulunan) throw new Error('Kullanıcı verisi çekilemedi');
 
       setAktifKullanici(bulunan);
-      localStorage.setItem("aktifKullanici", JSON.stringify(bulunan));
-      navigate("/");
+      localStorage.setItem('aktifKullanici', JSON.stringify(bulunan));
+      navigate('/');
     } catch (err) {
-      console.error("Giriş başarısız:", err);
-      alert("Giriş başarısız. Lütfen bilgileri kontrol edin.");
+      console.error('Giriş başarısız:', err);
+      alert('Giriş başarısız. Lütfen bilgileri kontrol edin.');
     }
   };
 

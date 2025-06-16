@@ -1,51 +1,61 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
+import ItemButton from '../components/buttons/ItemButton';
 
 function AdminPage() {
+  const { aktifKullanici } = useOutletContext();
+  const rolId = aktifKullanici?.rolId;
+  const navigate = useNavigate();
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <div style={{ marginTop: '30px' }}>
-        {/* Satır 1: Herkes */}
-        <div style={{ marginBottom: '20px' }}>
-          <Link
-            to="/satis"
-            style={{ marginRight: '20px', fontSize: '18px' }}
-          >
-            Satışlar
-          </Link>
-          <Link
-            to="/siparis"
-            style={{ marginRight: '20px', fontSize: '18px' }}
+    <div className="text-center mt-12 space-y-6">
+      {/* Satır 1: Herkes */}
+      {(rolId === 1 || rolId === 2 || rolId === 3) && (
+        <div className="flex flex-wrap justify-center gap-4">
+          <ItemButton
+            onClick={() => navigate('/siparis')}
+            color="outline"
           >
             Sipariş
-          </Link>
-        </div>
-
-        {/* Satır 2: Editor ve Admin */}
-        <div style={{ marginBottom: '20px' }}>
-          <Link
-            to="/urun"
-            style={{ marginRight: '20px', fontSize: '18px' }}
+          </ItemButton>
+          <ItemButton
+            onClick={() => navigate('/urun')}
+            color="outline"
           >
             Ürünler
-          </Link>
-          <Link
-            to="/tedarik"
-            style={{ marginRight: '20px', fontSize: '18px' }}
+          </ItemButton>
+        </div>
+      )}
+
+      {/* Satır 2: Editor ve Admin */}
+      {(rolId === 1 || rolId === 2) && (
+        <div className="flex flex-wrap justify-center gap-4">
+          <ItemButton
+            onClick={() => navigate('/satis')}
+            color="outline"
+          >
+            Satışlar
+          </ItemButton>
+          <ItemButton
+            onClick={() => navigate('/tedarik')}
+            color="outline"
           >
             Tedarikçiler
-          </Link>
+          </ItemButton>
         </div>
+      )}
 
-        {/* Satır 3: Sadece Admin */}
-        <div style={{ marginBottom: '20px' }}>
-          <Link
-            to="/admin/yonetimkontrol"
-            style={{ marginRight: '20px', fontSize: '18px' }}
+      {/* Satır 3: Sadece Admin */}
+      {rolId === 1 && (
+        <div className="flex flex-wrap justify-center gap-4">
+          <ItemButton
+            onClick={() => navigate('/admin/yonetimkontrol')}
+            color="outline"
           >
             Yönetimsel Araçlar
-          </Link>
+          </ItemButton>
         </div>
-      </div>
+      )}
     </div>
   );
 }

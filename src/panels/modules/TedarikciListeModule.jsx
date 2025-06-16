@@ -31,7 +31,7 @@ function TedarikciListeModule({
         },
       ]}
       pagination={true}
-      pageSize={10}
+      pageSize={8}
       sortable={true}
       defaultSortKey="tedarikciAdi"
       renderRow={(t) => (

@@ -8,6 +8,7 @@ export default function UrunButtonModule({ urunler, onUrunTikla }) {
           key={urun.urunId}
           urun={urun}
           onClick={() => onUrunTikla(urun)}
+          children={urun.urunAdi}
         />
       ))}
     </div>

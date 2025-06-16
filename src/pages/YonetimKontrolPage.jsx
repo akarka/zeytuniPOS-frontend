@@ -5,12 +5,9 @@ import ContentContainer from '../components/ContentContainer';
 function YonetimKontrolPage() {
   return (
     <ContentContainer>
-      <h2 className="text-xl font-bold mb-6 text-center">
-        Genel Yönetim Paneli
-      </h2>
       <PanelComponent
         panelConfig={adminPanelConfig}
-        baslik=" "
+        baslik="Genel Yönetim Paneli"
       />
     </ContentContainer>
   );

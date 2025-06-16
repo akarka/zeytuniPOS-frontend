@@ -12,7 +12,9 @@ export default function PanelComponent({ panelConfig, baslik = 'Panel' }) {
     <div className="flex flex-col gap-6">
       {/* Başlık ve buton grubu */}
       <div>
-        <h2 className="text-2xl font-semibold text-gray-800">{baslik}</h2>
+        <h2 className="text-2xl font-semibold text-center text-gray-800">
+          {baslik}
+        </h2>
         <div className="flex flex-wrap gap-2 mt-2">
           {panelConfig.map((panel) => (
             <button
@@ -32,7 +34,7 @@ export default function PanelComponent({ panelConfig, baslik = 'Panel' }) {
       </div>
 
       {/* İçerik kutusu */}
-      <div className="border border-gray-300 rounded p-4 bg-white max-h-[70vh] overflow-y-auto shadow-sm">
+      <div className="border border-gray-300 rounded p-4 bg-white h-[470px] overflow-y-auto shadow-sm">
         {sol || sag ? (
           <div className="flex gap-6">
             <div className="basis-1/3 border-r pr-4">

@@ -1,18 +1,14 @@
 import MasterButton from './MasterButton';
 
-export default function ItemButton({ urun, onClick, ...rest }) {
-  const handleClick = () => {
-    onClick?.(urun);
-  };
-
+export default function ItemButton({ urun, onClick, children, ...rest }) {
   return (
     <MasterButton
-      onClick={handleClick}
+      onClick={onClick}
       color="success"
       size="xl"
       {...rest}
     >
-      {urun.urunAdi}
+      {children}
     </MasterButton>
   );
 }

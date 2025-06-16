@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 const API_KEY = 'fdec481604e84af9ca7aa46399e2c28f';
 const CACHE_KEY = 'havaCache';
-const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 saat
+const CACHE_DURATION_MS = 60 * 60 * 1000;
 
 export default function HavaDurumuWidget() {
   const [hava, setHava] = useState(null);

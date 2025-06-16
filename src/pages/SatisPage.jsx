@@ -8,6 +8,7 @@ function SatisPage() {
   const [satislar, setSatislar] = useState([]);
   const [urunSecenekleri, setUrunSecenekleri] = useState([]);
   const [duzenlenen, setDuzenlenen] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     fetchSatislar();
@@ -26,14 +27,46 @@ function SatisPage() {
   };
 
   const handleEkle = async (yeniSatis) => {
-    await api.post('/api/satislar/dto', yeniSatis);
-    fetchSatislar();
+    try {
+      await api.post('/api/satislar/dto', yeniSatis);
+      fetchSatislar();
+      setErrorMessage('');
+    } catch (error) {
+      if (
+        error.response?.status === 400 &&
+        typeof error.response.data === 'object'
+      ) {
+        const values = Object.values(error.response.data);
+        setErrorMessage(values[0] || 'Lütfen eksik alanları kontrol edin.');
+      } else if (error.response?.status === 403) {
+        setErrorMessage('Bu işlem için yetkiniz yok.');
+      } else {
+        setErrorMessage('Sunucu hatası oluştu. Lütfen tekrar deneyin.');
+      }
+    }
   };
 
   const handleGuncelle = async () => {
-    await api.put('/api/satislar/dto', duzenlenen);
-    setDuzenlenen(null);
-    fetchSatislar();
+    try {
+      await api.put('/api/satislar/dto', duzenlenen);
+      setDuzenlenen(null);
+      fetchSatislar();
+      setErrorMessage('');
+    } catch (error) {
+      if (
+        error.response?.status === 400 &&
+        typeof error.response.data === 'object'
+      ) {
+        const values = Object.values(error.response.data);
+        setErrorMessage(
+          values[0] || 'Lütfen eksik veya hatalı alanları düzeltin.',
+        );
+      } else if (error.response?.status === 403) {
+        setErrorMessage('Bu işlem için yetkiniz yok.');
+      } else {
+        setErrorMessage('Sunucu hatası oluştu. Lütfen tekrar deneyin.');
+      }
+    }
   };
 
   const handleSil = async (id) => {
@@ -44,7 +77,12 @@ function SatisPage() {
   return (
     <ContentContainer>
       <h2 className="text-xl font-bold mb-6 text-center">Satış Yönetimi</h2>
-      <div className="flex gap-6">
+      {errorMessage && (
+        <div className="text-center text-red-600 text-sm font-semibold mb-4">
+          {errorMessage}
+        </div>
+      )}
+      <div className="flex gap-6 h-[560px] overflow-y-auto border rounded shadow-sm p-4 bg-white">
         <div className="basis-1/4 border-r pr-4">
           <h3 className="text-lg font-bold mb-6 text-center">Yeni Satış</h3>
           <SatisEkleModule

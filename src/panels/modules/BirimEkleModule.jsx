@@ -6,8 +6,10 @@ function BirimEkleModule({ yeniBirim, setYeniBirim, handleEkle }) {
     <div className="flex flex-col items-center gap-3 py-6">
       <InputField
         label="Yeni Birim Adı"
-        value={yeniBirim}
-        onChange={(e) => setYeniBirim(e.target.value)}
+        value={yeniBirim.birimAdi}
+        onChange={(e) =>
+          setYeniBirim({ ...yeniBirim, birimAdi: e.target.value })
+        }
         placeholder="Yeni birim adı"
         width="w-64"
         showTopLabel={false}

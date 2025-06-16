@@ -16,31 +16,35 @@ function UrunListeModule({
   handleSil,
   birimSecenekleri,
   altKategoriSecenekleri,
+  rolId,
 }) {
   const labelGetir = (id, from) => {
     const secenek = from.find((s) => s.id === id);
     return secenek ? secenek.label : id;
   };
+  const columns = [
+    { key: 'urunAdi', label: 'Ürün Adı' },
+    { key: 'birimId', label: 'Birim' },
+    { key: 'guncelSatisFiyati', label: 'Satış Fiyatı' },
+    { key: 'altKategoriId', label: 'Alt Kategori' },
+  ];
 
+  if (rolId !== 3) {
+    columns.push({
+      key: 'actions',
+      label: 'İşlemler',
+      sortable: false,
+      thClassName: 'p-2 border w-40 sticky right-0 bg-white z-10',
+      tdClassName: 'border p-2 w-40 sticky right-0 bg-white z-0',
+    });
+  }
   return (
     <TableMaster
       data={urunler}
       keyField="urunId"
-      columns={[
-        { key: 'urunAdi', label: 'Ürün Adı' },
-        { key: 'birimId', label: 'Birim' },
-        { key: 'guncelSatisFiyati', label: 'Satış Fiyatı' },
-        { key: 'altKategoriId', label: 'Alt Kategori' },
-        {
-          key: 'actions',
-          label: 'İşlemler',
-          sortable: false,
-          thClassName: 'p-2 border w-40 sticky right-0 bg-white z-10',
-          tdClassName: 'border p-2 w-40 sticky right-0 bg-white z-0',
-        },
-      ]}
+      columns={columns}
       pagination={true}
-      pageSize={10}
+      pageSize={8}
       sortable={true}
       defaultSortKey="urunAdi"
       renderRow={(u) => (
@@ -105,21 +109,23 @@ function UrunListeModule({
               labelGetir(u.altKategoriId, altKategoriSecenekleri)
             )}
           </td>
-          <td className="border p-2">
-            <div className="grid grid-cols-2 gap-1">
-              {duzenlenen?.urunId === u.urunId ? (
-                <>
-                  <KaydetButton onClick={handleGuncelle} />
-                  <IptalButton onClick={() => setDuzenlenen(null)} />
-                </>
-              ) : (
-                <>
-                  <DuzenleButton onClick={() => setDuzenlenen(u)} />
-                  <SilButton onClick={() => handleSil(u.urunId)} />
-                </>
-              )}
-            </div>
-          </td>
+          {rolId !== 3 && (
+            <td className="border p-2">
+              <div className="grid grid-cols-2 gap-1">
+                {duzenlenen?.urunId === u.urunId ? (
+                  <>
+                    <KaydetButton onClick={handleGuncelle} />
+                    <IptalButton onClick={() => setDuzenlenen(null)} />
+                  </>
+                ) : (
+                  <>
+                    <DuzenleButton onClick={() => setDuzenlenen(u)} />
+                    <SilButton onClick={() => handleSil(u.urunId)} />
+                  </>
+                )}
+              </div>
+            </td>
+          )}
         </>
       )}
     />

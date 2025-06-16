@@ -39,7 +39,7 @@ function SatisListeModule({
         },
       ]}
       pagination={true}
-      pageSize={10}
+      pageSize={8}
       sortable={true}
       defaultSortKey="satisTarihi"
       renderRow={(s) => (

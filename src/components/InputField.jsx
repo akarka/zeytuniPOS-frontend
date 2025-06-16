@@ -7,7 +7,7 @@ function InputField({
   className = '',
   width = 'w-full',
   inputClassName = '',
-  showTopLabel = true, // ← yeni kontrol
+  showTopLabel = true,
 }) {
   return (
     <div className={`form-control ${width}`}>
@@ -21,7 +21,8 @@ function InputField({
         value={value}
         onChange={onChange}
         placeholder={placeholder || label}
-        className={`input input-bordered input-sm ${inputClassName} ${className}`}
+        className={`input input-bordered input-sm ${inputClassName} ${className} 
+        }`}
       />
     </div>
   );

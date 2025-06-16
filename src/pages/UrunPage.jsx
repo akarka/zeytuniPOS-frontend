@@ -3,12 +3,15 @@ import api from '../util/api';
 import ContentContainer from '../components/ContentContainer';
 import UrunEkleModule from '../panels/modules/UrunEkleModule';
 import UrunListeModule from '../panels/modules/UrunListeModule';
+import { useOutletContext } from 'react-router-dom';
 
 function UrunPage() {
   const [urunler, setUrunler] = useState([]);
   const [birimSecenekleri, setBirimSecenekleri] = useState([]);
   const [altKategoriSecenekleri, setAltKategoriSecenekleri] = useState([]);
   const [duzenlenen, setDuzenlenen] = useState(null);
+  const { aktifKullanici } = useOutletContext();
+  const rolId = aktifKullanici?.rolId;
 
   useEffect(() => {
     fetchUrunler();
@@ -58,15 +61,17 @@ function UrunPage() {
   return (
     <ContentContainer>
       <h2 className="text-xl font-bold mb-6 text-center">Ürün Yönetimi</h2>
-      <div className="flex gap-6">
-        <div className="basis-1/4 border-r pr-4">
-          <h3 className="text-lg font-bold mb-6 text-center">Yeni Ürün</h3>
-          <UrunEkleModule
-            birimSecenekleri={birimSecenekleri}
-            altKategoriSecenekleri={altKategoriSecenekleri}
-            onEkle={handleEkle}
-          />
-        </div>
+      <div className="flex gap-6 h-[560px] overflow-y-auto border rounded shadow-sm p-4 bg-white">
+        {aktifKullanici.rolId === 1 || aktifKullanici.rolId === 2 ? (
+          <div className="basis-1/4 border-r pr-4">
+            <h3 className="text-lg font-bold mb-6 text-center">Yeni Ürün</h3>
+            <UrunEkleModule
+              birimSecenekleri={birimSecenekleri}
+              altKategoriSecenekleri={altKategoriSecenekleri}
+              onEkle={handleEkle}
+            />
+          </div>
+        ) : null}
         <div className="basis-3/4 pl-4">
           <UrunListeModule
             urunler={urunler}
@@ -76,6 +81,7 @@ function UrunPage() {
             handleSil={handleSil}
             birimSecenekleri={birimSecenekleri}
             altKategoriSecenekleri={altKategoriSecenekleri}
+            rolId={rolId}
           />
         </div>
       </div>
