@@ -37,7 +37,7 @@ function App() {
         <Route
           path="/"
           element={
-            <RequireAuth>
+            <RequireAuth allowedRoles={[1, 2, 3]}>
               <MasterLayout
                 aktifKullanici={aktifKullanici}
                 setAktifKullanici={setAktifKullanici}
@@ -52,23 +52,43 @@ function App() {
           />
           <Route
             path="urun"
-            element={<UrunPage />}
+            element={
+              <RequireAuth allowedRoles={[1, 2, 3]}>
+                <UrunPage />
+              </RequireAuth>
+            }
           />
           <Route
             path="satis"
-            element={<SatisPage />}
+            element={
+              <RequireAuth allowedRoles={[1, 2]}>
+                <SatisPage />
+              </RequireAuth>
+            }
           />
           <Route
             path="siparis"
-            element={<SiparisPage />}
+            element={
+              <RequireAuth allowedRoles={[1, 2, 3]}>
+                <SiparisPage />
+              </RequireAuth>
+            }
           />
           <Route
             path="tedarik"
-            element={<TedarikciPage />}
+            element={
+              <RequireAuth allowedRoles={[1, 2]}>
+                <TedarikciPage />
+              </RequireAuth>
+            }
           />
           <Route
             path="admin/yonetimkontrol"
-            element={<YonetimKontrolPage />}
+            element={
+              <RequireAuth allowedRoles={[1]}>
+                <YonetimKontrolPage />
+              </RequireAuth>
+            }
           />
         </Route>
         {/* Fallback yönlendirme */}

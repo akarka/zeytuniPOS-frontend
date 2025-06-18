@@ -2,33 +2,28 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080',
-  withCredentials: true
-} );
+  withCredentials: true,
+});
 
-// İstek interceptor'ı ekleyin
 api.interceptors.request.use(
-  config => {
-    // İsteğe header ekleyebilirsiniz (gerekirse)
+  (config) => {
     return config;
   },
-  error => {
+  (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
-// Yanıt interceptor'ı ekleyin
 api.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
-  error => {
-    // 403 hatası için özel işlem yapabilirsiniz
+  (error) => {
     if (error.response && error.response.status === 403) {
       console.error('Yetkilendirme hatası:', error);
-      // İsterseniz kullanıcıyı login sayfasına yönlendirebilirsiniz
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
